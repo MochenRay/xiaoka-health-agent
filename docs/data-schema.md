@@ -2,7 +2,7 @@
 
 ## 每日数据 JSON
 
-零点结算后生成，存放在 `workspace/data/YYYY-MM/DD.json`。
+零点结算后生成，存放在 `data/YYYY-MM-DD.json`。
 
 ```json
 {
