@@ -13,7 +13,9 @@
    - 逐个收集：身高 → 体重 → 年龄 → 性别 → 目标（减脂/增肌/维持）→ 目标体重 → 活动水平
    - 每次只问一个问题，等用户回答后再问下一个
    - 全部收集完后计算 BMR/TDEE/热量目标
-   - **必须用文件工具将数据写入 `config/profile.md` 和 `config/goals.md`**（参考 `config/profile.template.md` 和 `config/goals.template.md` 的格式）
+   - **必须用文件工具写入 `config/profile.md` 和 `config/goals.md`**
+   - 写入前**先读取** `config/profile.template.md` 和 `config/goals.template.md`，**严格按模板结构填写**，不要自创格式
+   - 模板中的所有段落和字段都要保留，用户未提供的可选字段留空
    - 写入完成后告知用户"档案已保存"
 3. 如果存在 → 读取 profile，按 SKILL.md 的路由表处理用户消息
 
