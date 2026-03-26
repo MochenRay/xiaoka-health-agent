@@ -29,14 +29,14 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 - 用 Mifflin-St Jeor 算 BMR/TDEE（公式见 `references/nutrition.md`）
 - 按目标类型设定热量缺口/盈余，算每日热量目标和宏量分配
 - 写入 `config/profile.md`（从 `config/profile.template.md` 生成）+ `config/goals.md`（从 `config/goals.template.md` 生成）
-- 创建 `workspace/logs/`、`workspace/data/`、`workspace/medical/`、`workspace/food-library/` 目录
+- 创建 `workspace/logs/`、`workspace/data/`、`medical/`、`workspace/food-library/` 目录
 - 中断恢复：下次进入检查已有 profile 的完整性，只补问缺失字段
 
 ## A1 饮食记录
 
-- 读当日日志 `workspace/logs/YYYY-MM/DD.md`（不存在则从 `templates/daily-log.md` 复制创建）
+- 读当日日志 `logs/YYYY-MM-DD.md`（不存在则从 `templates/daily-log.md` 复制创建）
 - 计算已有累计热量和宏量
-- 识别食物+份量。食物数据查询优先级：`workspace/food-library/my-foods.json` > `references/cn-food-db.json` > AI 估算（标注 `⚡AI估算`）
+- 识别食物+份量。食物数据查询优先级：`food-library/my-foods.json` > `references/cn-food-db.json` > AI 估算（标注 `⚡AI估算`）
 - 追加到日志饮食区，**强制输出格式**：
 
 ```
@@ -63,8 +63,8 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 - Vision 识别报告照片或解析文字数据
 - 逐项对照 `references/medical-markers.md` 标注 ✅正常 / ⚠️偏高 / ⚠️偏低
-- 通俗解释临床意义；有历史数据（`workspace/medical/`）则对比变化
-- 存入 `workspace/medical/YYYY-MM-DD-{类型}.md`
+- 通俗解释临床意义；有历史数据（`medical/`）则对比变化
+- 存入 `medical/YYYY-MM-DD-{类型}.md`
 - **附医学免责声明**（见 `agent.md`）
 
 ## A4 运动记录
@@ -88,7 +88,7 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 - 营养成分表照片 → Vision 提取：品名、每100g 热量/蛋白质/碳水/脂肪
 - 展示识别结果，等用户确认
-- 确认后写入 `workspace/food-library/my-foods.json`
+- 确认后写入 `food-library/my-foods.json`
 
 ## A8 Profile 更新
 
@@ -115,10 +115,10 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 # 日志管理
 
-- 日志路径：`workspace/logs/YYYY-MM/DD.md`
+- 日志路径：`logs/YYYY-MM-DD.md`
 - 不存在 → 从 `templates/daily-log.md` 复制，替换标题日期
 - **追加写入**，不覆盖已有内容
-- 结构化数据同步：Cron 零点读当日 Markdown，写入 `workspace/data/YYYY-MM/DD.json`
+- 结构化数据同步：Cron 零点读当日 Markdown，写入 `data/YYYY-MM-DD.json`
 
 # 行为约束
 
