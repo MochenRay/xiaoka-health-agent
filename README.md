@@ -59,7 +59,9 @@ cd xiaoka-health-agent
 
 ```
 xiaoka-health-agent/
-├── agent.md              ← 小卡的人格设定
+├── agent.md              ← 小卡的人格设定（通用入口）
+├── SOUL.md               ← 同 agent.md（OpenClaw 兼容）
+├── IDENTITY.md           ← Agent 身份标识（OpenClaw 兼容）
 ├── SKILL.md              ← 技能路由和 Workflow 定义
 ├── references/           ← 知识库（营养/医学/药物/补剂/运动/设备）
 ├── config/               ← 配置模板（profile + goals）
