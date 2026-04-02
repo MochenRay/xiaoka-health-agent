@@ -11,7 +11,7 @@
 | **体检解读** | 照片/文字 → 逐项解读 → 异常标注 → 历史对比 |
 | **补剂管理** | 三级循证推荐 → 交互作用检查 → 服用时机 |
 | **运动记录** | Apple Health 截图/手动输入 → 消耗计算 |
-| **周报/月报** | 自动汇总趋势 → 亮点 → 改进建议 |
+| **周报/月报** | 提供模板；自动汇总依赖部署侧 Cron |
 
 ## 它不做什么
 
@@ -28,7 +28,16 @@ git clone https://github.com/你的用户名/xiaoka-health-agent.git
 cd xiaoka-health-agent
 ```
 
-### 2. 首次对话
+### 2. 可选：先建运行时目录
+
+如果你的运行环境不会自动创建目录，先手动准备：
+
+```bash
+mkdir -p workspace/{logs,data,medical,reports,food-library}
+printf '[]\n' > workspace/food-library/my-foods.json
+```
+
+### 3. 首次对话
 
 在你的 AI 平台（OpenClaw / Claude Code 等）中加载本仓库，然后发送任意消息。小卡会自动检测到 profile 尚未配置，引导你完成初始化：
 
@@ -39,7 +48,14 @@ cd xiaoka-health-agent
      你的身高是多少？（cm）
 ```
 
-### 3. 开始使用
+标准运行时约定见 [docs/phase1-minimum-contract.md](docs/phase1-minimum-contract.md)。仓库规范统一为：
+
+- 用户档案：`config/profile.md`、`config/goals.md`
+- 每日日志：`workspace/logs/YYYY-MM/DD.md`
+- 结算 JSON：`workspace/data/YYYY-MM/DD.json`
+- 体检/报告/食物库：`workspace/medical/`、`workspace/reports/`、`workspace/food-library/`
+
+### 4. 开始使用
 
 配置完成后，直接跟小卡对话即可：
 
@@ -66,11 +82,20 @@ xiaoka-health-agent/
 ├── references/           ← 知识库（营养/医学/药物/补剂/运动/设备）
 ├── config/               ← 配置模板（profile + goals）
 ├── templates/            ← 日志和报告模板
-├── scripts/              ← 工具脚本（Apple Health 解析）
-├── workspace/            ← 用户数据（.gitignore'd）
+├── scripts/              ← 预留：Phase 2 工具脚本（当前仅占位说明）
+├── workspace/            ← 用户数据（logs/data/medical/reports/food-library）
 ├── docs/                 ← PRD + Schema + 知识库来源
 └── deploy/               ← 部署指南（OpenClaw / Claude Code）
 ```
+
+## 运行时约定
+
+Phase 1 的最小可用约定见 [docs/phase1-minimum-contract.md](docs/phase1-minimum-contract.md)。
+
+重点只有两条：
+
+- `config/` 放用户档案和目标，不放日志数据
+- `workspace/` 放所有运行时健康数据，按月分目录存日志和 JSON
 
 ## 知识库来源
 
@@ -103,7 +128,7 @@ xiaoka-health-agent/
 
 ## 隐私
 
-- 所有健康数据存储在本地 `workspace/` 目录，不上传任何服务器
+- 所有健康数据默认存储在本地 `config/` 和 `workspace/` 目录，不上传任何服务器
 - 使用云端模型 API 时，对话内容会发送给模型提供商（如阿里云、Moonshot 等）
 - 如需完全离线使用，请部署本地模型
 

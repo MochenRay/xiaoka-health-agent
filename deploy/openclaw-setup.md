@@ -21,7 +21,19 @@ git clone https://github.com/MochenRay/xiaoka-health-agent.git workspace-xiaoka
 
 ```bash
 mkdir -p ~/.openclaw/workspace-xiaoka/workspace/{logs,data,medical,reports,food-library}
+printf '[]\n' > ~/.openclaw/workspace-xiaoka/workspace/food-library/my-foods.json
 ```
+
+仓库标准路径约定：
+
+- `config/profile.md`、`config/goals.md`
+- `workspace/logs/YYYY-MM/DD.md`
+- `workspace/data/YYYY-MM/DD.json`
+- `workspace/medical/`
+- `workspace/reports/`
+- `workspace/food-library/my-foods.json`
+
+如果你机器上已经有旧版本地任务在读写根目录 `logs/` 或 `data/`，先迁移到 `workspace/` 约定，再启用新任务。
 
 ### 3. 注册 Agent
 
@@ -80,6 +92,8 @@ openclaw agents list --bindings | grep xiaoka
 
 ## Cron 任务（Phase 2 配置）
 
+这些任务属于 **OpenClaw Cron**，不是系统 `crontab`。
+
 | 任务 | 时间 | 说明 |
 |------|------|------|
 | 零点结算 | 00:00 | 读当天 Markdown 日志 → 写入 JSON |
@@ -91,6 +105,7 @@ openclaw agents list --bindings | grep xiaoka
 ## 注意事项
 
 - Agent 需要 workspace 目录的文件读写权限
+- 仓库里的 Phase 1 标准路径以 `workspace/` 为准；历史本地部署可能仍残留旧路径
 - 推荐使用支持多模态（图片输入）的模型
 - 使用云端模型时，对话内容会发送给模型提供商
 - 后续更新：在 Mac Mini 上 `cd workspace-xiaoka && git pull` 即可同步

@@ -32,14 +32,14 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 - 用 Mifflin-St Jeor 算 BMR/TDEE（公式见 `references/nutrition.md`）
 - 按目标类型设定热量缺口/盈余，算每日热量目标和宏量分配
 - 写入 `config/profile.md`（从 `config/profile.template.md` 生成）+ `config/goals.md`（从 `config/goals.template.md` 生成）
-- 创建 `workspace/logs/`、`workspace/data/`、`medical/`、`workspace/food-library/` 目录
+- 创建 `workspace/logs/`、`workspace/data/`、`workspace/medical/`、`workspace/reports/`、`workspace/food-library/` 目录
 - 中断恢复：下次进入检查已有 profile 的完整性，只补问缺失字段
 
 ## A1 饮食记录
 
-- 读当日日志 `logs/YYYY-MM-DD.md`（不存在则从 `templates/daily-log.md` 复制创建）
+- 读当日日志 `workspace/logs/YYYY-MM/DD.md`（不存在则先创建当月目录，再从 `templates/daily-log.md` 复制创建）
 - 计算已有累计热量和宏量
-- 识别食物+份量。食物数据查询优先级：`food-library/my-foods.json` > `references/cn-food-db.json` > AI 估算（标注 `⚡AI估算`）
+- 识别食物+份量。食物数据查询优先级：`workspace/food-library/my-foods.json` > `references/cn-food-db.json` > AI 估算（标注 `⚡AI估算`）
 - 追加到日志饮食区，**强制输出格式**：
 
 ```
@@ -66,8 +66,8 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 - Vision 识别报告照片或解析文字数据
 - 逐项对照 `references/medical-markers.md` 标注 ✅正常 / ⚠️偏高 / ⚠️偏低
-- 通俗解释临床意义；有历史数据（`medical/`）则对比变化
-- 存入 `medical/YYYY-MM-DD-{类型}.md`
+- 通俗解释临床意义；有历史数据（`workspace/medical/`）则对比变化
+- 存入 `workspace/medical/YYYY-MM-DD-{类型}.md`
 - **附医学免责声明**（见 `agent.md`）
 
 ## A4 运动记录
@@ -91,7 +91,7 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 - 营养成分表照片 → Vision 提取：品名、每100g 热量/蛋白质/碳水/脂肪
 - 展示识别结果，等用户确认
-- 确认后写入 `food-library/my-foods.json`
+- 确认后写入 `workspace/food-library/my-foods.json`
 
 ## A8 Profile 更新
 
@@ -109,7 +109,7 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 - 读取 `config/profile.md`（BMI、体重、慢性病、用药）和 `config/goals.md`（目标）
 - 读取 `references/medications.md` 获取临床数据和决策框架
-- 如有体检数据（`medical/` 目录），读取最近一次用于辅助判断
+- 如有体检数据（`workspace/medical/` 目录），读取最近一次用于辅助判断
 - 按以下框架评估：
   1. 是否符合药物干预标准？（BMI≥30，或 BMI≥27+合并症，或生活方式干预 3-6 月后减重<5%）
   2. 如果符合 → 推荐首选药物（基于用户情况）、剂量递增方案、预期效果、副作用概率
@@ -130,8 +130,8 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 ## S1 睡眠分析
 
-- 读取近期日志中的睡眠数据（从 `logs/` 目录最近 7 天的 .md 文件中提取）
-- 如有 `data/` 目录的 JSON 文件，优先从 JSON 读取结构化睡眠数据
+- 读取近期日志中的睡眠数据（从 `workspace/logs/` 目录最近 7 天的 .md 文件中提取）
+- 如有 `workspace/data/` 目录的 JSON 文件，优先从 JSON 读取结构化睡眠数据
 - 分析维度：
   1. 平均时长 vs 建议（7-9h）
   2. 入睡时间规律性（标准差）
@@ -156,10 +156,10 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 # 日志管理
 
-- 日志路径：`logs/YYYY-MM-DD.md`
-- 不存在 → 从 `templates/daily-log.md` 复制，替换标题日期
+- 日志路径：`workspace/logs/YYYY-MM/DD.md`
+- 不存在 → 创建当月目录后，从 `templates/daily-log.md` 复制，替换标题日期
 - **追加写入**，不覆盖已有内容
-- 结构化数据同步：Cron 零点读当日 Markdown，写入 `data/YYYY-MM-DD.json`
+- 结构化数据同步：Cron 零点读当日 Markdown，写入 `workspace/data/YYYY-MM/DD.json`
 
 # 行为约束
 
