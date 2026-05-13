@@ -85,8 +85,8 @@
 - [x] `结算校验` 运行态修复：OpenClaw job 已检查标准 `workspace/...` 路径。
 - [x] `前日汇总` 运行态修复：OpenClaw job 只在有内容时推送；无数据可返回 `NO_REPLY` 静默。
 - [x] 将 cron payload 与 schedule 写入仓库文档：见 `docs/openclaw-runtime.md`。
-- [ ] 添加小卡 `周报` OpenClaw cron job。
-- [ ] 添加小卡 `月报` OpenClaw cron job。
+- [x] 添加小卡 `周报` OpenClaw cron job：已创建，未启用。
+- [x] 添加小卡 `月报` OpenClaw cron job：已创建，未启用。
 - [x] 定义周报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义月报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 尚未验证。
@@ -230,7 +230,7 @@ flowchart TD
 - [x] 增加周报 cron payload 草案：见 `docs/report-automation.md`，尚未创建 OpenClaw job。
 - [x] 增加月报 cron payload 草案：见 `docs/report-automation.md`，尚未创建 OpenClaw job。
 - [x] 补 Phase 2B runtime Task Plan：见 `docs/superpowers/plans/2026-05-13-xiaoka-phase2b-runtime.md`。
-- [ ] 提交并推送 Phase 2A/2B 仓库文档，再让 Mac Mini workspace `git pull --ff-only origin main`。
+- [x] 提交并推送 Phase 2A/2B 仓库文档，再让 Mac Mini workspace `git pull --ff-only origin main`。
 - [x] 定义报告文件命名、覆盖、幂等规则。
 - [x] 定义周报/月报缺失日期补结算规则。
 - [x] 定义报告覆盖率规则：
@@ -309,8 +309,9 @@ flowchart TD
 - [x] 增加缺失日期补结算逻辑。
 - [x] 补 Phase 2B runtime Task Plan。
 - [ ] 提交并同步仓库文档到 Mac Mini workspace。
-- [ ] 创建 OpenClaw 周报 cron job。
-- [ ] 创建 OpenClaw 月报 cron job。
+- [x] 创建 OpenClaw 周报 cron job：已创建，未启用。
+- [x] 创建 OpenClaw 月报 cron job：已创建，未启用。
+- [ ] 启用 OpenClaw 周报/月报 cron job。
 - [ ] 用无数据与样例数据两类场景手动测试 cron。
 - [x] 定义生成报告写入 `workspace/reports/` 的仓库侧规格。
 - [x] 更新 `deploy/openclaw-setup.md` 的计划中状态与规格链接。
@@ -411,7 +412,7 @@ flowchart TD
 ## 当前最佳下一步
 
 - [x] **先做阶段 2A**：新增 `docs/openclaw-runtime.md`，修正文档漂移，把当前 cron 真相写入仓库。
-- [ ] **再做阶段 2B runtime**：按 `docs/superpowers/plans/2026-05-13-xiaoka-phase2b-runtime.md` 创建并验证周报/月报 cron jobs。
+- [ ] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
 - [ ] **再做阶段 2C**：Apple Health 最小导入。
 - [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
 

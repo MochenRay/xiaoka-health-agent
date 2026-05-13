@@ -533,7 +533,7 @@ Run:
 
 ```bash
 git diff --check
-rg -n '2110286901|qwen3\.5|kimi-k2\.5|周六|月末 20' README.md deploy docs plans templates
+rg -n --glob '!docs/superpowers/plans/*' '2110286901|qwen3\.5|kimi-k2\.5|周六|月末 20' README.md deploy docs plans templates
 ```
 
 Expected: `git diff --check` exits `0`; `rg` exits `1` with no matches.

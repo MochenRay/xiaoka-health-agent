@@ -44,8 +44,8 @@
 | 零点结算 | `f6f9f188-6010-459a-ae67-f8300d164466` | `5 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
 | 结算校验 | `31478134-17c9-4058-90cb-d68a0fd58c42` | `30 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
 | 前日汇总 | `81d3e9d4-fc76-4b08-8f33-6e533334bbb8` | `0 8 * * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已存在 |
-| 周报 | 未创建 | 建议 `30 8 * * 1 @ Asia/Shanghai` | 建议 `announce` | `xiaoka` | 计划中 |
-| 月报 | 未创建 | 建议 `30 8 1 * * @ Asia/Shanghai` | 建议 `announce` | `xiaoka` | 计划中 |
+| 周报 | `961c8fcb-9f52-4842-94f6-720202ffa5b2` | `30 8 * * 1 @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已创建，未启用 |
+| 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已创建，未启用 |
 
 ## 现有 Job 合同
 
