@@ -11,7 +11,7 @@
 | **体检解读** | 照片/文字 → 逐项解读 → 异常标注 → 历史对比 |
 | **补剂管理** | 三级循证推荐 → 交互作用检查 → 服用时机 |
 | **运动记录** | Apple Health 截图/手动输入 → 消耗计算 |
-| **周报/月报** | 提供模板；自动汇总依赖部署侧 Cron |
+| **周报/月报** | 提供模板；自动汇总仍在 Phase 2 规划中 |
 
 ## 它不做什么
 
@@ -84,8 +84,9 @@ xiaoka-health-agent/
 ├── templates/            ← 日志和报告模板
 ├── scripts/              ← 预留：Phase 2 工具脚本（当前仅占位说明）
 ├── workspace/            ← 用户数据（logs/data/medical/reports/food-library）
-├── docs/                 ← PRD + Schema + 知识库来源
-└── deploy/               ← 部署指南（OpenClaw / Claude Code）
+├── docs/                 ← 路径合同、Schema、运行态规格、知识库来源
+├── deploy/               ← 部署指南（OpenClaw / Claude Code）
+└── plans/                ← 项目路线图与阶段清单
 ```
 
 ## 运行时约定
@@ -101,7 +102,7 @@ Phase 1 的最小可用约定见 [docs/phase1-minimum-contract.md](docs/phase1-m
 
 | 文件 | 来源 | 数据量 |
 |------|------|--------|
-| cn-food-db.json | 《中国食物成分表》标准版第 6 版 | 1,677 条基础食材 |
+| cn-food-db.json | 《中国食物成分表》标准版第 6 版 | 1,657 条基础食材 |
 | nutrition.md | Mifflin-St Jeor, 中国居民膳食指南 | — |
 | medical-markers.md | 临床医学指南 | CBC/代谢/血脂/甲状腺/FeNO/激素等 |
 | medications.md | NEJM (STEP/SURMOUNT 试验) | GLP-1/减重药物决策框架 |
@@ -116,15 +117,18 @@ Phase 1 的最小可用约定见 [docs/phase1-minimum-contract.md](docs/phase1-m
 - **OpenClaw**：[deploy/openclaw-setup.md](deploy/openclaw-setup.md)
 - **Claude Code**：[deploy/claude-code-setup.md](deploy/claude-code-setup.md)
 
-## 推荐模型
+OpenClaw `cron` 运行态规格见 [docs/openclaw-runtime.md](docs/openclaw-runtime.md)。
+周报/月报自动化设计见 [docs/report-automation.md](docs/report-automation.md)。
 
-| 模型 | 多模态 | 中文 | 说明 |
-|------|--------|------|------|
-| qwen3.5-plus | ✅ | ✅ | 推荐：原生多模态，中文优秀 |
-| kimi-k2.5 | ✅ | ✅ | 备选：多模态+视觉推理强 |
-| Claude | ✅ | ✅ | 推理质量最高 |
+## 模型选择
 
-最低要求：支持多模态（图片输入）的模型。纯文本模型可用但无法处理截图。
+最低要求：
+
+- 支持中文健康记录与较强的指令遵循
+- 如需处理照片、截图、营养标签或体检单，必须支持图片输入
+- 能稳定遵守本仓库的文件读写路径合同
+
+具体模型以部署环境可用项为准；OpenClaw 中可用 `openclaw agents list --bindings` 查看当前 `xiaoka` 配置。
 
 ## 隐私
 

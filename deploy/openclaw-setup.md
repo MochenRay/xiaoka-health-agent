@@ -4,7 +4,7 @@
 
 - OpenClaw Gateway 已运行
 - Telegram Bot Token 已获取（从 @BotFather 创建）
-- 多模态模型可用（推荐 `bailian/qwen3.5-plus`）
+- 模型已在 OpenClaw 中可用；实际运行模型以 `openclaw agents list --bindings` 为准
 
 ## 步骤
 
@@ -44,7 +44,7 @@ openclaw config get agents.list | python3 -c "import json,sys; print(len(json.lo
 # 注册（把 N 替换为实际数字）
 openclaw config set "agents.list[N].id" "xiaoka"
 openclaw config set "agents.list[N].workspace" "$HOME/.openclaw/workspace-xiaoka"
-openclaw config set "agents.list[N].model" "bailian/qwen3.5-plus"
+openclaw config set "agents.list[N].model" "<你的可用模型>"
 openclaw config set "agents.list[N].identity.name" "小卡"
 openclaw config set "agents.list[N].identity.emoji" "🏋️"
 ```
@@ -94,18 +94,21 @@ openclaw agents list --bindings | grep xiaoka
 
 这些任务属于 **OpenClaw Cron**，不是系统 `crontab`。
 
-| 任务 | 时间 | 说明 |
-|------|------|------|
-| 零点结算 | 00:00 | 读当天 Markdown 日志 → 写入 JSON |
-| 结算校验 | 00:30 | 对比 JSON 和 Markdown 数据一致性 |
-| 前日汇总 | 08:00 | 有记录才发 |
-| 周报 | 周六 20:00 | 始终生成，标注覆盖率 |
-| 月报 | 月末 20:00 | 同上 |
+当前运行态规格见 [docs/openclaw-runtime.md](../docs/openclaw-runtime.md)。仓库 `git pull` 不会自动修改 OpenClaw `cron` payload；修改任务前先备份 `~/.openclaw/cron/jobs.json`。
+周报/月报的生成规则见 [docs/report-automation.md](../docs/report-automation.md)。
+
+| 任务 | 时间 | 状态 | 说明 |
+|------|------|------|------|
+| 零点结算 | 00:05 | 已存在 | 读昨日 Markdown 日志 → 写入 JSON |
+| 结算校验 | 00:30 | 已存在 | 对比 JSON 和 Markdown 数据一致性 |
+| 前日汇总 | 08:00 | 已存在 | 有 JSON 才发；无数据输出 `NO_REPLY` |
+| 周报 | 周一 08:30 | 计划中 | 统计上一个完整自然周，标注覆盖率 |
+| 月报 | 每月 1 日 08:30 | 计划中 | 统计上一个完整自然月，标注覆盖率 |
 
 ## 注意事项
 
 - Agent 需要 workspace 目录的文件读写权限
 - 仓库里的 Phase 1 标准路径以 `workspace/` 为准；历史本地部署可能仍残留旧路径
-- 推荐使用支持多模态（图片输入）的模型
+- 推荐使用支持多模态（图片输入）的模型；当前部署模型以 OpenClaw 配置为准
 - 使用云端模型时，对话内容会发送给模型提供商
-- 后续更新：在 Mac Mini 上 `cd workspace-xiaoka && git pull` 即可同步
+- 后续仓库更新：在 Mac Mini 上 `cd ~/.openclaw/workspace-xiaoka && git pull --ff-only origin main` 同步；如需修改 `cron`，再按 runtime 规格单独验证
