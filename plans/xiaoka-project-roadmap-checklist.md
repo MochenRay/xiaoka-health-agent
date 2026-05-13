@@ -127,6 +127,7 @@
 - [ ] `CHANGELOG.md`。
 - [ ] 在仓库中放入完整 PRD，或放入明确的 canonical PRD 指针。
 - [x] 运行态操作手册：区分 repo sync 与 OpenClaw runtime sync。
+- [x] README 当前能力介绍已合并 Phase 2B runtime 进展。
 - [ ] 当前模型推荐看起来可能过时；公开发布前需重新核验。
 - [x] 食物库数量漂移需修正：旧文 `1677`，当前核实 `1657`。
 - [ ] 发布前检查：secret scan、ignored runtime files、文档链接、Markdown 质量。
@@ -208,8 +209,8 @@ flowchart TD
 
 - [x] OpenClaw 部署指南已存在。
 - [x] Claude Code 使用指南已存在。
-- [x] Mac Mini 工作区当前同步到仓库 HEAD `1967ae4`。
-- [x] OpenClaw 小卡 `零点结算`、`结算校验`、`前日汇总` 当前状态为 `ok`。
+- [x] Mac Mini 工作区已同步到 `origin/main`；只保留 OpenClaw 注入的未跟踪 overlay 文件。
+- [x] OpenClaw 小卡 `零点结算`、`结算校验`、`前日汇总`、`周报`、`月报` 当前状态为 `ok`。
 - [x] `前日汇总` 无数据分支已采用 `NO_REPLY` 静默行为。
 
 ## 已知缺口清单
