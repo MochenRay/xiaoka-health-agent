@@ -1,8 +1,8 @@
 # OpenClaw Runtime 规格
 
 > 最近核验：2026-05-13 PDT
-> 仓库基线：`main` / `1967ae4`
-> Mac Mini workspace：`~/.openclaw/workspace-xiaoka` / `main` / `1967ae4`
+> 仓库基线：`main` / `bfca7ce`（运行态验证时）
+> Mac Mini workspace：`~/.openclaw/workspace-xiaoka` / `main` / `bfca7ce`（运行态验证时）
 > Runtime 真相层：Mac Mini 上的 `~/.openclaw/cron/jobs.json`
 
 本文件记录小卡在 OpenClaw 中的运行态合同。仓库 `git pull` 只同步文档和 Agent 包，不会自动修改 OpenClaw `cron` payload；凡改 `cron`，必须单独走运行态备份、编辑和验证。
@@ -44,8 +44,25 @@
 | 零点结算 | `f6f9f188-6010-459a-ae67-f8300d164466` | `5 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
 | 结算校验 | `31478134-17c9-4058-90cb-d68a0fd58c42` | `30 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
 | 前日汇总 | `81d3e9d4-fc76-4b08-8f33-6e533334bbb8` | `0 8 * * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已存在 |
-| 周报 | `961c8fcb-9f52-4842-94f6-720202ffa5b2` | `30 8 * * 1 @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已创建，未启用 |
-| 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已创建，未启用 |
+| 周报 | `961c8fcb-9f52-4842-94f6-720202ffa5b2` | `30 8 * * 1 @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，手动验证通过 |
+| 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，手动验证通过 |
+
+## 最近运行态验证
+
+2026-05-13 PDT 已在 Mac Mini 上备份并启用周报、月报任务。启用前备份：
+
+```text
+mac-mini:~/.openclaw/cron/jobs.json.bak-20260513-194637-before-enable
+```
+
+手动运行结果：
+
+| 名称 | Run ID | Status | Duration | Summary | Delivery | 生成文件 |
+|------|--------|--------|----------|---------|----------|----------|
+| 周报 | `manual:961c8fcb-9f52-4842-94f6-720202ffa5b2:1778672830235:5` | `ok` | `61093ms` | `NO_REPLY` | `not-delivered` | `workspace/reports/weekly-2026-05-10.md` |
+| 月报 | `manual:51522e31-54dd-495e-8c0e-e8432bb75acd:1778672906326:6` | `ok` | `103683ms` | `NO_REPLY` | `not-delivered` | `workspace/reports/monthly-2026-04.md` |
+
+两次手动运行均为零覆盖场景：runtime 生成 `0/N` 报告文件，但 Telegram fallback 未发送。`workspace/reports/` 属于运行态数据目录，被 `.gitignore` 排除，不进入仓库。
 
 ## 现有 Job 合同
 

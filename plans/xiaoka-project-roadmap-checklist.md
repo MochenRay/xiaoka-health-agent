@@ -1,8 +1,8 @@
 # 小卡健康 Agent 项目路线图清单
 
-> 审计时间：2026-05-12 23:43 PDT
-> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `1967ae4`（`Unify phase 1 runtime path conventions`）
-> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `1967ae4`；OpenClaw 中三条小卡 `cron` 任务当前为 `ok`：`零点结算`、`结算校验`、`前日汇总`
+> 审计时间：2026-05-13 PDT
+> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `bfca7ce`（运行态验证时）
+> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `bfca7ce`；OpenClaw 中五条小卡 `cron` 任务已启用：`零点结算`、`结算校验`、`前日汇总`、`周报`、`月报`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
 
 ## 文档语言约定
@@ -30,7 +30,7 @@
 - 本次审计已核实事项：
   - `references/cn-food-db.json` 当前为 `1657` 条记录；`README.md` 与 `docs/knowledge-base-sources.md` 已从旧数值 `1677` 修正。
   - `SKILL.md` 当前 `170` 行，符合旧约束 `<=200` 行。
-  - OpenClaw 中暂未发现小卡 `周报` 或 `月报` cron 任务。
+  - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证。
 
 ## 真相层边界
 
@@ -48,7 +48,7 @@
 - [x] 医学分析层：体检/血检、补剂、GLP-1、运动、睡眠、趋势分析。
 - [x] 输入方式面向真实使用：文字、图片/截图、Telegram/OpenClaw 对话。
 - [x] 安全边界明确：不做诊断，不开处方；医学建议必须附免责声明。
-- [ ] 自动化闭环尚未完整：日结算运行态已修复，仓库化 runtime spec 已补，但周报/月报尚未完成。
+- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖场景已验证；样例数据场景、Apple Health 导入与回归 fixtures 尚未完成。
 - [ ] 跨维度洞察尚未闭环：PRD 已定义方向，当前仍未打通数据、报告、长期趋势。
 
 ## 旧计划拆期
@@ -85,12 +85,12 @@
 - [x] `结算校验` 运行态修复：OpenClaw job 已检查标准 `workspace/...` 路径。
 - [x] `前日汇总` 运行态修复：OpenClaw job 只在有内容时推送；无数据可返回 `NO_REPLY` 静默。
 - [x] 将 cron payload 与 schedule 写入仓库文档：见 `docs/openclaw-runtime.md`。
-- [x] 添加小卡 `周报` OpenClaw cron job：已创建，未启用。
-- [x] 添加小卡 `月报` OpenClaw cron job：已创建，未启用。
+- [x] 添加小卡 `周报` OpenClaw cron job：已启用，零覆盖场景手动验证通过。
+- [x] 添加小卡 `月报` OpenClaw cron job：已启用，零覆盖场景手动验证通过。
 - [x] 定义周报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义月报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
-- [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 尚未验证。
-- [x] 定义周报/月报前缺失日期结算/补结算规则；runtime 尚未验证。
+- [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 零覆盖场景已验证。
+- [x] 定义周报/月报前缺失日期结算/补结算规则；runtime 零覆盖场景已验证。
 - [ ] 在 `scripts/` 下加入 Apple Health parser。
 - [ ] 处理 Apple Health 时区问题与临时文件清理。
 - [ ] 增加结算/报告回归用的样例数据或 fixtures。
@@ -308,11 +308,13 @@ flowchart TD
 - [x] 增加报告幂等规则：同一路径可安全重生成。
 - [x] 增加缺失日期补结算逻辑。
 - [x] 补 Phase 2B runtime Task Plan。
-- [ ] 提交并同步仓库文档到 Mac Mini workspace。
-- [x] 创建 OpenClaw 周报 cron job：已创建，未启用。
-- [x] 创建 OpenClaw 月报 cron job：已创建，未启用。
-- [ ] 启用 OpenClaw 周报/月报 cron job。
+- [x] 提交并同步仓库文档到 Mac Mini workspace。
+- [x] 创建 OpenClaw 周报 cron job：已启用。
+- [x] 创建 OpenClaw 月报 cron job：已启用。
+- [x] 启用 OpenClaw 周报/月报 cron job。
 - [ ] 用无数据与样例数据两类场景手动测试 cron。
+  - 已完成：无数据/零覆盖场景。周报生成 `workspace/reports/weekly-2026-05-10.md`，月报生成 `workspace/reports/monthly-2026-04.md`，两者 run status 均为 `ok`，Telegram fallback 均 `not-delivered`。
+  - 未完成：样例数据场景。
 - [x] 定义生成报告写入 `workspace/reports/` 的仓库侧规格。
 - [x] 更新 `deploy/openclaw-setup.md` 的计划中状态与规格链接。
 
@@ -412,7 +414,7 @@ flowchart TD
 ## 当前最佳下一步
 
 - [x] **先做阶段 2A**：新增 `docs/openclaw-runtime.md`，修正文档漂移，把当前 cron 真相写入仓库。
-- [ ] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
+- [x] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
 - [ ] **再做阶段 2C**：Apple Health 最小导入。
 - [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
 
