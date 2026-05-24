@@ -1,8 +1,8 @@
 # OpenClaw Runtime 规格
 
 > 最近核验：2026-05-24 CST
-> 仓库基线：`main` / `9dc598f`
-> Mac Mini workspace：`~/.openclaw/workspace-xiaoka` / `main` / `9dc598f`
+> 运行态验证基线：`main` / `8f24546`
+> Mac Mini workspace 验证基线：`~/.openclaw/workspace-xiaoka` / `main` / `8f24546`
 > Runtime 真相层：Mac Mini 上的 `~/.openclaw/cron/jobs.json`
 
 本文件记录小卡在 OpenClaw 中的运行态合同。仓库 `git pull` 只同步文档和 Agent 包，不会自动修改 OpenClaw `cron` payload；凡改 `cron`，必须单独走运行态备份、编辑和验证。
@@ -19,9 +19,10 @@
 
 ## 当前部署快照
 
-- Gateway process 正在运行；2026-05-24 核验时默认 IPv4 loopback
-  `127.0.0.1:18789` 连接报 `EADDRNOTAVAIL`，`localhost` / `::1` 可访问。
-  临时运行 CLI 时需使用 `--url 'ws://[::1]:18789' --token <gateway-token>`。
+- Gateway process 正在运行；2026-05-24 Mac Mini 重启并更新 Clash Verge /
+  Tailscale 后，默认 IPv4 loopback `127.0.0.1:18789` 已恢复可用。
+  若后续再次出现 `EADDRNOTAVAIL`，可临时改用
+  `--url 'ws://[::1]:18789' --token <gateway-token>`。
 - Agent ID：`xiaoka`。
 - 当前模型：`openai/gpt-5.4`。
 - OpenClaw workspace tracked files clean；存在 `.openclaw/`、`AGENTS.md`、`MEMORY.md` 等未跟踪 runtime overlay，属 OpenClaw 本地注入层。
@@ -60,26 +61,25 @@
 
 2026-05-24 CST 核验：
 
-- 本地 `main`、`origin/main`、Mac Mini workspace 均为 `9dc598f`。
+- 本地 `main`、`origin/main`、Mac Mini workspace 均为 `8f24546`。
 - Mac Mini 直接 `git pull --ff-only origin main` 因外网 443/22 不通失败；本次通过
-  `git bundle` 经 SSH 传输并 fast-forward 到 `9dc598f`，同时更新了
+  `git bundle` 经 SSH 传输并 fast-forward 到 `8f24546`，同时更新了
   `refs/remotes/origin/main`。
 - `openclaw cron list` 中五条小卡任务均 enabled，最近运行状态均为 `ok`。
 - 2026-05-24 的日结算/校验/前日汇总因 2026-05-23 无日志或 JSON 而静默跳过；这符合“无数据不打扰”的当前合同。
 - 当前 reports 文件：`workspace/reports/weekly-2026-05-10.md`、`workspace/reports/weekly-2026-05-17.md`、`workspace/reports/monthly-2026-04.md`，均为零覆盖报告。
 - Mac Mini 仍存在旧根目录 `logs/`、`data/`；其中 `2026-03-26` 日志/JSON 与标准 `workspace/` 副本 hash 相同。旧目录只作为 legacy 层看待，后续清理前需备份。
 
-2026-05-24 Phase 2B synthetic runtime 验证尝试：
+2026-05-24 Phase 2B synthetic runtime 验证：
 
 | 尝试 | 备份目录 | 结果 | 清理 |
 |------|----------|------|------|
 | 第一次 | `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-180535` | 默认 CLI 走 `127.0.0.1:18789`，gateway 连接 `EADDRNOTAVAIL`；cron 未实际执行 | synthetic JSON 已删除，原零覆盖报告已恢复 |
 | 第二次 | `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-181001` | 改用 `ws://[::1]:18789` 后周报入队并运行，但模型请求 `https://chatgpt.com/backend-api/codex/responses` stream disconnected；月报未继续执行 | synthetic JSON 已删除，原零覆盖报告已恢复 |
+| 第三次 | `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-195710` | Mac Mini 重启并更新 Clash Verge / Tailscale 后，默认 gateway 与外网恢复；周报 run `ok`，覆盖率 `3/7`；月报 run `ok`，覆盖率 `3/30`；两者 summary 均非 `NO_REPLY` | generated 报告已归档到备份目录，synthetic JSON 已删除，原零覆盖报告已恢复 |
 
-结论：仓库 fixture 与 Mac Mini workspace 已就绪，但非零 runtime 验证未通过。阻塞项是
-Mac Mini 当前外网不可达：`github.com:443`、`chatgpt.com:443`、`apple.com:443`
-均连接失败。修复 Mac Mini 网络/代理后，按 [report-automation.md](report-automation.md)
-重跑 synthetic 验证。
+结论：Phase 2B 非零 synthetic runtime 验证已通过。报告生成和 Telegram
+delivery 均在 synthetic 数据场景完成；验证后 runtime 已恢复为原零覆盖报告状态。
 
 2026-05-13 PDT 已在 Mac Mini 上备份并启用周报、月报任务。启用前备份：
 
@@ -194,11 +194,11 @@ ssh mac-mini 'openclaw cron list | grep xiaoka'
 - 无数据分支输出 `NO_REPLY`，避免 Telegram 噪音。
 - 用无数据与样例数据两类场景检查 `openclaw cron runs --id ...`。
 
-## Phase 2B Synthetic 非零验证待执行
+## Phase 2B Synthetic 非零验证
 
 仓库已定义 Phase 2B synthetic fixture，用于验证周报/月报非零覆盖分支。
-截至本记录，本节只定义执行规范，不表示 Mac Mini runtime 已完成 synthetic
-验证。
+Mac Mini runtime 已于 2026-05-24 完成一次安全验证；本节继续保留为后续
+回归验证规范。
 
 - fixture 来源：`fixtures/synthetic/phase2b/workspace/data/`
 - marker：每个 JSON 的 `notes` 必须包含 `SYNTHETIC_PHASE2B`
