@@ -1,8 +1,8 @@
 # OpenClaw Runtime 规格
 
-> 最近核验：2026-05-13 PDT
-> 仓库基线：`main` / `bfca7ce`（运行态验证时）
-> Mac Mini workspace：`~/.openclaw/workspace-xiaoka` / `main` / `bfca7ce`（运行态验证时）
+> 最近核验：2026-05-24 CST
+> 仓库基线：`main` / `8337077`
+> Mac Mini workspace：`~/.openclaw/workspace-xiaoka` / `main` / `8337077`
 > Runtime 真相层：Mac Mini 上的 `~/.openclaw/cron/jobs.json`
 
 本文件记录小卡在 OpenClaw 中的运行态合同。仓库 `git pull` 只同步文档和 Agent 包，不会自动修改 OpenClaw `cron` payload；凡改 `cron`，必须单独走运行态备份、编辑和验证。
@@ -16,6 +16,13 @@
 | OpenClaw workspace | `mac-mini:~/.openclaw/workspace-xiaoka` | 通过 `git pull --ff-only origin main` 同步 |
 | OpenClaw runtime | `mac-mini:~/.openclaw/cron/jobs.json` | `cron` job、schedule、payload 的最终真相 |
 | 用户健康数据 | `config/profile.md`、`config/goals.md`、`workspace/` | 被 `.gitignore` 排除，不进仓库 |
+
+## 当前部署快照
+
+- Gateway health：`{"ok":true,"status":"live"}`。
+- Agent ID：`xiaoka`。
+- 当前模型：`openai/gpt-5.4`。
+- OpenClaw workspace tracked files clean；存在 `.openclaw/`、`AGENTS.md`、`MEMORY.md` 等未跟踪 runtime overlay，属 OpenClaw 本地注入层。
 
 ## 路径合同
 
@@ -41,13 +48,21 @@
 
 | 名称 | ID | Schedule | Delivery | Agent | 状态 |
 |------|----|----------|----------|-------|------|
-| 零点结算 | `f6f9f188-6010-459a-ae67-f8300d164466` | `5 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
-| 结算校验 | `31478134-17c9-4058-90cb-d68a0fd58c42` | `30 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已存在 |
-| 前日汇总 | `81d3e9d4-fc76-4b08-8f33-6e533334bbb8` | `0 8 * * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已存在 |
-| 周报 | `961c8fcb-9f52-4842-94f6-720202ffa5b2` | `30 8 * * 1 @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，手动验证通过 |
-| 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，手动验证通过 |
+| 零点结算 | `f6f9f188-6010-459a-ae67-f8300d164466` | `5 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
+| 结算校验 | `31478134-17c9-4058-90cb-d68a0fd58c42` | `30 0 * * * @ Asia/Shanghai` | `none -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
+| 前日汇总 | `81d3e9d4-fc76-4b08-8f33-6e533334bbb8` | `0 8 * * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
+| 周报 | `961c8fcb-9f52-4842-94f6-720202ffa5b2` | `30 8 * * 1 @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
+| 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
 
 ## 最近运行态验证
+
+2026-05-24 CST 只读核验：
+
+- 本地 `main`、`origin/main`、Mac Mini workspace 均为 `8337077`。
+- `openclaw cron list` 中五条小卡任务均 enabled，最近运行状态均为 `ok`。
+- 2026-05-24 的日结算/校验/前日汇总因 2026-05-23 无日志或 JSON 而静默跳过；这符合“无数据不打扰”的当前合同。
+- 当前 reports 文件：`workspace/reports/weekly-2026-05-10.md`、`workspace/reports/weekly-2026-05-17.md`、`workspace/reports/monthly-2026-04.md`，均为零覆盖报告。
+- Mac Mini 仍存在旧根目录 `logs/`、`data/`；其中 `2026-03-26` 日志/JSON 与标准 `workspace/` 副本 hash 相同。旧目录只作为 legacy 层看待，后续清理前需备份。
 
 2026-05-13 PDT 已在 Mac Mini 上备份并启用周报、月报任务。启用前备份：
 

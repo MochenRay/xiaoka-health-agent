@@ -1,8 +1,8 @@
 # 小卡健康 Agent 项目路线图清单
 
-> 审计时间：2026-05-13 PDT
-> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `bfca7ce`（运行态验证时）
-> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `bfca7ce`；OpenClaw 中五条小卡 `cron` 任务已启用：`零点结算`、`结算校验`、`前日汇总`、`周报`、`月报`
+> 审计时间：2026-05-24 CST
+> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `8337077`
+> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `8337077`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
 
 ## 文档语言约定
@@ -30,7 +30,8 @@
 - 本次审计已核实事项：
   - `references/cn-food-db.json` 当前为 `1657` 条记录；`README.md` 与 `docs/knowledge-base-sources.md` 已从旧数值 `1677` 修正。
   - `SKILL.md` 当前 `170` 行，符合旧约束 `<=200` 行。
-  - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证。
+  - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证；2026-05-24 复核时五条 cron 最近状态均为 `ok`。
+  - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；共享层旧模型口径已需要刷新。
 
 ## 真相层边界
 
@@ -95,7 +96,7 @@
 - [ ] 处理 Apple Health 时区问题与临时文件清理。
 - [ ] 增加结算/报告回归用的样例数据或 fixtures。
 
-状态：**运行态部分完成，仓库侧尚未完整编码阶段 2**。
+状态：**运行态已接上并自然运行；样例数据验证、Apple Health parser 与回归 fixtures 尚未完成**。
 
 ### 原阶段 3：深度分析
 
@@ -221,15 +222,15 @@ flowchart TD
 - [ ] 决定是否把旧 PRD 导入仓库为 `docs/PRD.md`，或只保留 canonical 指针。
 - [ ] 增加 `CHANGELOG.md`。
 - [x] 若 `plans/` 成为长期计划层，则把它加入 `README.md` 目录树。
-- [ ] 重新核验模型推荐区，尤其多模态能力与当前模型名。
+- [ ] 重新核验模型推荐区，尤其多模态能力；当前 runtime 模型已核为 `openai/gpt-5.4`。
 - [x] 记录 repo-first 协作链：本机修改 -> push GitHub -> SSH Mac Mini pull。
 - [x] 单独记录 runtime 协作链：`openclaw cron edit/run/runs`、`jobs.json`、备份/恢复。
 
 ### 阶段 2 自动化
 
 - [x] 为现有三条 cron 写仓库侧规格文档。
-- [x] 增加周报 cron payload 草案：见 `docs/report-automation.md`，尚未创建 OpenClaw job。
-- [x] 增加月报 cron payload 草案：见 `docs/report-automation.md`，尚未创建 OpenClaw job。
+- [x] 增加周报 cron payload 草案：见 `docs/report-automation.md`；OpenClaw job 已创建并启用。
+- [x] 增加月报 cron payload 草案：见 `docs/report-automation.md`；OpenClaw job 已创建并启用。
 - [x] 补 Phase 2B runtime Task Plan：见 `docs/superpowers/plans/2026-05-13-xiaoka-phase2b-runtime.md`。
 - [x] 提交并推送 Phase 2A/2B 仓库文档，再让 Mac Mini workspace `git pull --ff-only origin main`。
 - [x] 定义报告文件命名、覆盖、幂等规则。
@@ -321,9 +322,10 @@ flowchart TD
 
 退出标准：
 
-- [ ] runtime job 可生成 `workspace/reports/weekly-YYYY-MM-DD.md`。
-- [ ] runtime job 可生成 `workspace/reports/monthly-YYYY-MM.md`。
-- [ ] 无数据分支不会产生 Telegram 噪音。
+- [x] runtime job 可生成 `workspace/reports/weekly-YYYY-MM-DD.md`。
+- [x] runtime job 可生成 `workspace/reports/monthly-YYYY-MM.md`。
+- [x] 无数据分支不会产生 Telegram 噪音。
+- [ ] 非零样例数据场景可生成摘要并回写报告。
 
 ### 阶段 2C：Apple Health 最小导入
 
