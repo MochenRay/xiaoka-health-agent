@@ -1,0 +1,17 @@
+{
+  "date": "2026-06-02",
+  "weight": {
+    "value": 84.7,
+    "unit": "kg",
+    "source": "synthetic_c8"
+  },
+  "nutrition": {
+    "total_calories": 1880,
+    "protein_g": 88,
+    "carbs_g": 214,
+    "fat_g": 62
+  },
+  "exercise": null,
+  "sleep": null,
+  "notes": "SYNTHETIC_C8 fabricated fixture; not real health data."
+}

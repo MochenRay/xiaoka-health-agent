@@ -6,8 +6,9 @@
 
 - Agent 核心工作流已可用：初始化、饮食、体重、体检、运动、补剂、睡眠、自建食物库、目标更新。
 - OpenClaw 自动化已启用：零点结算、结算校验、前日汇总、周报、月报。
-- 周报/月报已通过零覆盖场景验证：无数据时生成 `0/N` 报告文件，并输出 `NO_REPLY`，不会打扰 Telegram。
+- 周报/月报已通过零覆盖场景验证：无数据时分别生成 `0/7`、`0/30` 覆盖率报告，并输出 `NO_REPLY`，不会打扰 Telegram。
 - Phase 2C 最小闭环采用截图优先：已定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同，并用 synthetic fixture 验证“已确认截图识别结果 → Markdown 日志 → expected 标准 JSON”的本地映射；暂不做历史批量导入或 parser。
+- Phase 3A / C8 已定义一等跨维度 workflow 与报告 section contract，并用 synthetic fixture / validator 验证 sufficient 与 insufficient 两个分支；这是静态合同与 fixture 验证，不是 OpenClaw runtime 重新验证。
 
 ## 它能做什么
 
@@ -20,6 +21,7 @@
 | **运动/活动记录** | 记录手动运动描述，或从单张 Apple Watch / Apple Health 运动截图提取日期、类型、时长、active calories 和来源；活动摘要截图只记录日级步数/消耗 |
 | **补剂管理** | 记录补剂和剂量，检查补剂-药物冲突，必要时给出安全提醒 |
 | **睡眠记录** | 记录睡眠时长和质量，或从单张 Apple Watch / Apple Health 睡眠截图提取日期、时长和来源 |
+| **跨维度洞察** | C8 静态合同和手动分析路径已定义，synthetic fixture 已验证；OpenClaw runtime smoke 待验证；基于 daily JSON 连接饮食、体重、运动/活动、睡眠，数据不足时固定不做关联判断，不输出因果、诊断或处方 |
 | **自建食物库** | 从营养成分表照片提取数据，确认后写入个人食物库 |
 | **目标更新** | 修改体重、热量、宏量目标，并重算 BMR/TDEE |
 | **健康问答** | 基于仓库里的营养、医学、药物、补剂、运动、设备知识库回答问题 |
@@ -54,7 +56,7 @@
 ### 1. Clone
 
 ```bash
-git clone https://github.com/你的用户名/xiaoka-health-agent.git
+git clone https://github.com/MochenRay/xiaoka-health-agent.git
 cd xiaoka-health-agent
 ```
 
@@ -157,9 +159,12 @@ OpenClaw `cron` 运行态规格见 [docs/openclaw-runtime.md](docs/openclaw-runt
 ```bash
 python3 scripts/validate_phase2b_fixtures.py
 python3 scripts/validate_phase2c_screenshot_fixtures.py
+python3 scripts/validate_phase3a_c8_fixtures.py
 ```
 
 Phase 2C fixture 只验证已确认截图识别结果的记录合同，不验证 OCR 质量、真实图片渲染、runtime 结算、Apple Health XML、Health Auto Export 或历史批量导入。
+
+Phase 3A C8 fixture 只验证 synthetic fixture shape、报告 `## 跨维度观察` section wording，以及选定 source-backed metrics；不验证 OpenClaw runtime、真实报告生成器或个人健康数据。
 
 ## 模型选择
 

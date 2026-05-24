@@ -1,0 +1,29 @@
+{
+  "date": "2026-06-01",
+  "weight": {
+    "value": 84.8,
+    "unit": "kg",
+    "source": "synthetic_c8"
+  },
+  "nutrition": {
+    "total_calories": 2050,
+    "protein_g": 96,
+    "carbs_g": 230,
+    "fat_g": 70
+  },
+  "exercise": {
+    "total_burn": 280,
+    "activities": [
+      {
+        "type": "walk",
+        "duration_min": 50,
+        "calories": 280
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 7.0,
+    "quality": "fair"
+  },
+  "notes": "SYNTHETIC_C8 fabricated fixture; not real health data."
+}

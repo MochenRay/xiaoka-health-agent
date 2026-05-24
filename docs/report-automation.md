@@ -36,6 +36,14 @@
 - 有效天数少于 `3` 天时，只做轻量回顾，不做趋势判断。
 - 若要和上期对比，上期有效天数也必须不少于 `3` 天。
 - 缺失维度不补猜；报告中写“未记录”或跳过该维度。
+- 跨维度观察遵守 `docs/c8-cross-dimensional-insights.md`。
+- 有效 JSON 天数少于 `3` 天时，章节结论固定输出 `数据不足，暂不做关联判断。`
+- 某个候选关联配对日少于 `3` 天时，只跳过该候选关联，或对该候选关联输出固定不足句。
+- 其他满足门槛的候选关联仍可输出。
+- 若没有任何候选关联满足门槛，章节结论使用 `数据不足，暂不做关联判断。`
+- 跨维度观察只写“观察到 / 可能相关 / 值得继续观察 / 下周期重点跟踪”等弱判断。
+- 不得写确定因果、诊断或处方。
+- 周报/月报模板中的 `### 结论` 必须按数据门槛替换，不得把不足数据固定句当作无条件默认结论。
 
 ## 周报 Prompt 合同
 
@@ -52,8 +60,13 @@ OpenClaw 周报任务应使用如下语义：
 3. 对每一天按顺序读取 `workspace/data/{YYYY-MM}/{DD}.json`；若 JSON 缺失但 `workspace/logs/{YYYY-MM}/{DD}.md` 有用户记录，先按 `docs/data-schema.md` 补结算 JSON。
 4. 计算覆盖率 `X/7`，汇总体重、热量、蛋白质、运动、睡眠、补剂与备注。
 5. 有效天数少于 3 天时，只做轻量回顾，不做趋势判断。
-6. 按 `templates/weekly-report.md` 生成报告，写入目标路径；若文件已存在则覆盖。
-7. 禁止读写旧版根目录 `logs/`、`data/`、`medical/`、`reports/`、`food-library/`。
+6. 按 `docs/c8-cross-dimensional-insights.md` 生成 `## 跨维度观察`。优先连接 nutrition / weight / exercise / activity_summary / steps / sleep。
+7. 有效 JSON 天数少于 3 天时，章节结论固定写 `数据不足，暂不做关联判断。`
+8. 某个候选关联配对日少于 3 天时，只跳过该候选关联，或对该候选关联写固定不足句；其他满足门槛的候选关联仍可输出。
+9. 若没有任何候选关联满足门槛，章节结论使用 `数据不足，暂不做关联判断。`
+10. 跨维度观察缺失维度写“未记录”或跳过，不补猜；只允许弱判断，不写确定因果、诊断或处方。
+11. 按 `templates/weekly-report.md` 生成报告，写入目标路径；若文件已存在则覆盖。
+12. 禁止读写旧版根目录 `logs/`、`data/`、`medical/`、`reports/`、`food-library/`。
 
 输出要求：覆盖率为 0 时只输出 `NO_REPLY`；否则输出 3 行以内摘要和报告路径。
 ```
@@ -74,15 +87,23 @@ OpenClaw 月报任务应使用如下语义：
 4. 计算覆盖率 `X/N`，汇总体重、热量、蛋白质、运动、睡眠、补剂与备注。
 5. 有效天数少于 3 天时，只做轻量回顾，不做趋势判断。
 6. 如上月有效天数不少于 3 天，可做月环比；否则跳过环比。
-7. 按 `templates/monthly-report.md` 生成报告，写入目标路径；若文件已存在则覆盖。
-8. 禁止读写旧版根目录 `logs/`、`data/`、`medical/`、`reports/`、`food-library/`。
+7. 按 `docs/c8-cross-dimensional-insights.md` 生成 `## 跨维度观察`。优先连接 nutrition / weight / exercise / activity_summary / steps / sleep。
+8. 只有 supplements / medical 有明确来源时才补充到月度观察；不得假装 daily JSON 有每日药物字段。
+9. 有效 JSON 天数少于 3 天时，章节结论固定写 `数据不足，暂不做关联判断。`
+10. 某个候选关联配对日少于 3 天时，只跳过该候选关联，或对该候选关联写固定不足句；其他满足门槛的候选关联仍可输出。
+11. 若没有任何候选关联满足门槛，章节结论使用 `数据不足，暂不做关联判断。`
+12. 医学、药物、体检相关观察必须附边界。
+13. 按 `templates/monthly-report.md` 生成报告，写入目标路径；若文件已存在则覆盖。
+14. 禁止读写旧版根目录 `logs/`、`data/`、`medical/`、`reports/`、`food-library/`。
 
 输出要求：覆盖率为 0 时只输出 `NO_REPLY`；否则输出 3 行以内摘要和报告路径。
 ```
 
-## 下一步 Runtime 落地
+## Runtime 验证边界
 
-创建 OpenClaw Cron 前，先按 `docs/openclaw-runtime.md` 备份 `jobs.json`，再创建周报与月报任务。验证时必须覆盖两类场景：
+周报/月报 cron 已有启用与验证记录。本节只说明后续修改报告 prompt、模板或 cron payload 后的重新验证边界，不表示 C8 runtime 已重新验证。
+
+重新验证前，先按 `docs/openclaw-runtime.md` 备份 `jobs.json` 和会被覆盖的报告文件。验证时必须覆盖两类场景：
 
 - 无数据：写入或覆盖 `0/N` 报告，Telegram 输出 `NO_REPLY`。
 - 样例数据：生成报告文件，Telegram 输出简短摘要和报告路径。

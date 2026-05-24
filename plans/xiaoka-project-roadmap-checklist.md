@@ -1,6 +1,7 @@
 # 小卡健康 Agent 项目路线图清单
 
 > 审计时间：2026-05-24 CST
+> 仓库文档更新基线：当前编辑分支 `codex/xiaoka-c8-cross-dimensional` 基于 `main` / `origin/main` `b455977`；本文件当前 C8 改动尚待提交、合并、同步 Mac Mini runtime
 > 运行态验证基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `8f24546`
 > 远端运行态抽查基线：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `8f24546`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
@@ -29,7 +30,7 @@
   - `/Users/rayli/health-coach/docs/superpowers/plans/2026-03-25-xiaoka-phase1.md`
 - 本次审计已核实事项：
   - `references/cn-food-db.json` 当前为 `1657` 条记录；`README.md` 与 `docs/knowledge-base-sources.md` 已从旧数值 `1677` 修正。
-  - `SKILL.md` 当前 `180` 行，符合旧约束 `<=200` 行。
+  - `SKILL.md` 当前仍在旧约束 `<=200` 行内。
   - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证；2026-05-24 复核时五条 cron 最近状态均为 `ok`。
   - 2026-05-24 本地与 Mac Mini workspace 已同步到 `8f24546`；初次同步时 Mac Mini 直连 GitHub 失败，先通过 `git bundle` 经 SSH 同步。
   - 2026-05-24 Phase 2B synthetic runtime 非零验证已通过：周报覆盖率 `3/7`、月报覆盖率 `3/30`，两者 run status 均为 `ok` 且 summary 非 `NO_REPLY`；generated 报告已归档到 `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-195710/generated`，synthetic JSON 已清理、原零覆盖报告已恢复。
@@ -52,7 +53,8 @@
 - [x] 输入方式面向真实使用：文字、图片/截图、Telegram/OpenClaw 对话。
 - [x] 安全边界明确：不做诊断，不开处方；医学建议必须附免责声明。
 - [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖与 synthetic 非零场景已验证；Phase 2C 截图录入已有 synthetic mapping fixture 验证，真实截图/OCR runtime 验证与更完整回归 fixtures 尚未完成。
-- [ ] 跨维度洞察尚未闭环：PRD 已定义方向，当前仍未打通数据、报告、长期趋势。
+- [x] 跨维度洞察静态合同已完成：C8 workflow、报告 section contract、数据不足固定行为和 sufficient/insufficient synthetic validator 已定义。
+- [ ] 跨维度洞察 runtime 尚未重新验证：真实截图/OCR runtime smoke、C8 runtime smoke、长期趋势仍是后续项。
 
 ## 旧计划拆期
 
@@ -108,13 +110,16 @@
 - [x] `M1 药物评估` workflow 已加入 `SKILL.md`。
 - [x] `E1 运动建议` workflow 已加入 `SKILL.md`。
 - [x] `S1 睡眠分析` workflow 已加入 `SKILL.md`。
-- [ ] `C8 跨维度关联分析` 尚未成为一等 workflow。
-- [ ] 深度 workflow 目前只是 prompt 定义，缺少结构化测试样例与示例输出。
-- [ ] 深度 workflow 尚未稳定接入周报/月报模板。
+- [x] `C8 跨维度关联分析` 已成为一等 workflow。
+- [x] `C8 跨维度观察` 报告章节模板已定义。
+- [x] C8 数据不足行为已固定：有效 JSON 天数或候选关联配对日不足时，不做关联判断。
+- [x] C8 sufficient / insufficient synthetic fixtures 与 validator 已完成。
+- [ ] M1/E1/S1 目前仍缺少结构化测试样例与示例输出。
+- [ ] M1/E1/S1 尚未稳定接入周报/月报模板。
 - [ ] 药物/运动/睡眠分析尚未写入可供趋势分析复用的结构化摘要。
 - [ ] `profile` 与 `goals` 模板可能需扩展：运动背景、器材、用药状态、睡眠指标等字段。
 
-状态：**prompt 表层已开，端到端数据/报告闭环未完成**。
+状态：**C8 静态合同与 synthetic fixture 验证已完成；药物、运动、睡眠分析接入周报/月报、M1/E1/S1 结构化示例和真实 runtime C8 验证仍未完成**。
 
 ### 原阶段 4：打磨与文档
 
@@ -166,7 +171,8 @@ flowchart TD
 - [x] 必须先有 JSON 结算，才能做前日汇总、周报、月报。
 - [x] 必须先有补结算/缺失日期逻辑，周报/月报才可靠。
 - [x] 必须先有运行态文档，再继续新增 OpenClaw cron job，避免 runtime 只存在聊天记录里。
-- [ ] 必须先稳定报告模板，跨维度洞察才有落点。
+- [x] 静态报告模板已稳定，跨维度洞察已有章节落点。
+- [ ] runtime-proven 报告模板仍待 C8 runtime smoke 验证。
 - [x] Phase 2C 第一版不依赖 parser；设计目标是截图记录先追加到每日 Markdown，再由现有零点结算进入每日 JSON。
 - [ ] 必须先有足够的运动/睡眠结构化 JSON，才能稳定纳入趋势自动化。
 - [ ] 必须先有测试样例，才能安全迭代结算/报告 prompt。
@@ -259,9 +265,12 @@ flowchart TD
 
 ### 深度分析
 
-- [ ] 将 `C8 跨维度关联分析` 增加为显式 workflow 或报告章节。
+- [x] 将 `C8 跨维度关联分析` 增加为显式 workflow。
+- [x] 增加 C8 报告章节模板。
+- [x] 增加 C8 数据不足固定行为。
+- [x] 增加 C8 sufficient / insufficient synthetic fixture，并用 `python3 scripts/validate_phase3a_c8_fixtures.py` 验证。
 - [ ] 将药物、运动、睡眠分析接入周报/月报。
-- [ ] 增加 M1/E1/S1/C8 的结构化输出示例。
+- [ ] 增加 M1/E1/S1 的结构化输出示例。
 - [ ] 如深度 workflow 需要更多字段，则扩展 profile/goals 模板。
 - [ ] 增加风险护栏：GLP-1、不安全运动、异常体检指标、睡眠红旗信号。
 
@@ -352,19 +361,22 @@ flowchart TD
 
 目的：将孤立数据转为健康教练式洞察。
 
-- [ ] 定义 C8 workflow。
-- [ ] 增加 C8 报告章节模板。
-- [ ] 连接饮食、体重、运动、睡眠、药物、体检。
-- [ ] 增加“数据不足”行为。
-- [ ] 增加示例：
-  - 平台期结合蛋白质、运动、睡眠分析。
-  - 高热量日与睡眠/体重波动关系。
-  - GLP-1 肌肉流失风险护栏。
+- [x] 定义 C8 workflow。
+- [x] 增加 C8 报告章节模板。
+- [x] 连接 daily JSON 中的饮食、体重、运动/活动、睡眠。
+- [x] 增加“数据不足”行为：有效 JSON 天数或候选关联配对日不足时，固定不做关联判断。
+- [x] 增加 C8 synthetic fixture / 示例：
+  - sufficient：饮食、运动/活动、睡眠有足够配对日时，只输出低断言强度观察。
+  - insufficient：数据不足时只输出固定不足句。
+- [ ] 将药物、体检维度在有明确来源时接入月报观察。
+- [ ] 完成真实 runtime C8 验证。
 
 退出标准：
 
-- [ ] 有足够数据时，周报/月报包含有用的跨维度分析。
-- [ ] 覆盖率太低时，Agent 不做趋势断言。
+- [x] 静态 fixture 中有足够数据时，周报/月报 expected section 包含 source-backed 跨维度观察。
+- [x] 静态 fixture 中覆盖率太低时，Agent 不做趋势断言。
+- [ ] 真实 runtime 中有足够数据时，周报/月报包含有用的跨维度分析。
+- [ ] 真实 runtime 中覆盖率太低时，Agent 不做趋势断言。
 
 ### 阶段 4A：公开发布打磨
 
@@ -399,6 +411,7 @@ flowchart TD
 
 - [ ] 平台期检测与干预建议。
 - [ ] 饮食执行度评分：热量、蛋白质、膳食纤维、连续性。
+- [x] C8 跨维度洞察静态合同与 synthetic validator。
 - [ ] GLP-1 用户肌肉流失风险评分。
 - [ ] 体检指标趋势 Markdown 看板。
 - [ ] 伤病感知训练进阶。
@@ -416,6 +429,7 @@ flowchart TD
 
 - [ ] Mac Mini OpenClaw runtime smoke test 脚本。
 - [x] 每日/周报/月报 synthetic fixtures。
+- [x] C8 sufficient / insufficient synthetic fixtures 与 validator。
 - [ ] 结算 JSON 的 prompt 回归测试。
 - [ ] JSON schema validation。
 - [ ] 可选：从 `workspace/data/` 生成静态 dashboard。
@@ -426,6 +440,9 @@ flowchart TD
 - [x] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
 - [x] **修复 Mac Mini 网络/代理后重跑 Phase 2B 非零样例数据 runtime 验证**。
 - [x] **补 Phase 2C 已确认截图识别结果 mapping fixture 验证**。
-- [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
+- [x] **阶段 3A 静态合同与 synthetic validator**：已定义 C8 workflow、报告章节模板、数据不足行为和 sufficient/insufficient fixture 验证。
+- [ ] **下一步 1：真实截图/OCR runtime smoke**。
+- [ ] **下一步 2：C8 runtime smoke**。
+- [ ] **下一步 3：Phase 4A 发布打磨**。
 
-原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步，runtime 零覆盖与 synthetic 非零场景均已验证，截图先行路径也已用 synthetic recognized fixture 验证到 expected JSON。下一步可以做真实截图/OCR runtime smoke test，或转入 C8 跨维度洞察；parser、Health Auto Export 和 XML 批量导入留作后续扩展。
+原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步到既有 runtime 基线，runtime 零覆盖与 synthetic 非零场景均已验证，截图先行路径也已用 synthetic recognized fixture 验证到 expected JSON。本轮 C8 只完成静态合同与 synthetic validator，后续应做真实截图/OCR runtime smoke、C8 runtime smoke，或转入 Phase 4A 发布打磨；parser、Health Auto Export 和 XML 批量导入留作后续扩展。

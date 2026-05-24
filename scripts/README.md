@@ -14,6 +14,9 @@
 - `validate_phase2c_screenshot_fixtures.py`：校验 Phase 2C screenshot-first
   synthetic fixtures，覆盖已确认截图识别结果到 Markdown 日志和 expected
   daily JSON 的字段映射；不验证 OCR 或 runtime 结算。
+- `validate_phase3a_c8_fixtures.py`：校验 Phase 3A C8 synthetic fixture
+  shape、expected report 的 `## 跨维度观察` section wording，以及 selected
+  source-backed metrics。
 
 后续可能放入这里的脚本包括：
 
