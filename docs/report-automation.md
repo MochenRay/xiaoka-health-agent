@@ -132,6 +132,17 @@ git diff --check
    这里使用 `--wait --expect-final` 等待当前 run 完成，再用运行前时间戳验证
    history 中的最新记录是新 run、终态为 `ok`，且 summary 不是 `NO_REPLY`：
 
+   若 Mac Mini 默认 CLI 连接 `127.0.0.1:18789` 报 `EADDRNOTAVAIL`，先在
+   远端命令中设置：
+
+   ```bash
+   token=$(jq -r '.gateway.auth.token // empty' ~/.openclaw/openclaw.json)
+   gateway_args=(--url 'ws://[::1]:18789' --token "$token")
+   ```
+
+   然后把 `${gateway_args[@]}` 加到 `openclaw cron run` 和
+   `openclaw cron runs` 命令中；不要打印 token。
+
    ```bash
    ssh mac-mini 'weekly=961c8fcb-9f52-4842-94f6-720202ffa5b2 && before=$(node -e "console.log(Date.now())") && openclaw cron run --wait --expect-final --wait-timeout 10m "$weekly" && openclaw cron runs --id "$weekly" --limit 1 > /tmp/xiaoka-phase2b-weekly-runs.json && sed -n "/^{/,\$p" /tmp/xiaoka-phase2b-weekly-runs.json | jq -e --argjson before "$before" ".entries[0] | select(.ts >= \$before and .action == \"finished\" and .status == \"ok\" and (.summary // \"\") != \"NO_REPLY\") | {jobId, status, summary, durationMs}"'
    ssh mac-mini 'monthly=51522e31-54dd-495e-8c0e-e8432bb75acd && before=$(node -e "console.log(Date.now())") && openclaw cron run --wait --expect-final --wait-timeout 10m "$monthly" && openclaw cron runs --id "$monthly" --limit 1 > /tmp/xiaoka-phase2b-monthly-runs.json && sed -n "/^{/,\$p" /tmp/xiaoka-phase2b-monthly-runs.json | jq -e --argjson before "$before" ".entries[0] | select(.ts >= \$before and .action == \"finished\" and .status == \"ok\" and (.summary // \"\") != \"NO_REPLY\") | {jobId, status, summary, durationMs}"'

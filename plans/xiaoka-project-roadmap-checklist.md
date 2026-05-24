@@ -1,8 +1,8 @@
 # 小卡健康 Agent 项目路线图清单
 
 > 审计时间：2026-05-24 CST
-> 当前仓库基线：`/Users/rayli/.config/superpowers/worktrees/xiaoka-health-agent/codex-xiaoka-phase2b2c`，分支 `codex/xiaoka-phase2b2c`，HEAD `6db7793`
-> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `6db7793`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
+> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `9dc598f`
+> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `9dc598f`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
 
 ## 文档语言约定
@@ -31,6 +31,8 @@
   - `references/cn-food-db.json` 当前为 `1657` 条记录；`README.md` 与 `docs/knowledge-base-sources.md` 已从旧数值 `1677` 修正。
   - `SKILL.md` 当前 `180` 行，符合旧约束 `<=200` 行。
   - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证；2026-05-24 复核时五条 cron 最近状态均为 `ok`。
+  - 2026-05-24 本地与 Mac Mini workspace 已同步到 `9dc598f`；Mac Mini 直连 GitHub 失败，本次通过 `git bundle` 经 SSH 同步。
+  - 2026-05-24 Phase 2B synthetic runtime 非零验证已尝试但未通过：Mac Mini 外网 443 不通，周报运行在模型请求阶段断流；synthetic JSON 已清理、零覆盖报告已恢复。
   - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；共享层旧模型口径已需要刷新。
 
 ## 真相层边界
@@ -317,7 +319,7 @@ flowchart TD
 - [x] 启用 OpenClaw 周报/月报 cron job。
 - [ ] 用无数据与样例数据两类场景手动测试 cron。
   - 已完成：无数据/零覆盖场景。周报生成 `workspace/reports/weekly-2026-05-10.md`，月报生成 `workspace/reports/monthly-2026-04.md`，两者 run status 均为 `ok`，Telegram fallback 均 `not-delivered`。
-  - 未完成：样例数据场景。
+  - 未完成：样例数据场景。2026-05-24 已用 synthetic fixture 尝试，因 Mac Mini 外网不可达导致模型请求断流；备份位于 `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-181001`，synthetic JSON 已清理，原零覆盖报告已恢复。
 - [x] 定义生成报告写入 `workspace/reports/` 的仓库侧规格。
 - [x] 更新 `deploy/openclaw-setup.md` 的计划中状态与规格链接。
 
@@ -422,7 +424,8 @@ flowchart TD
 
 - [x] **先做阶段 2A**：新增 `docs/openclaw-runtime.md`，修正文档漂移，把当前 cron 真相写入仓库。
 - [x] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
-- [ ] **同时推进当前收口**：Phase 2B 非零样例数据 runtime 验证，Phase 2C 截图录入工作流。
+- [ ] **修复 Mac Mini 网络/代理后重跑 Phase 2B 非零样例数据 runtime 验证**。
+- [ ] **再补 Phase 2C 截图录入 fixture 与结算验证**。
 - [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
 
-原因：周报/月报依赖稳定每日 JSON；runtime 文档可减少重复漂移；截图记录可先通过每日 Markdown 和现有结算链进入 JSON，parser、Health Auto Export 和 XML 批量导入留作后续扩展。
+原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步，但 runtime 非零验证受 Mac Mini 外网阻塞。截图记录可先通过每日 Markdown 和现有结算链进入 JSON，parser、Health Auto Export 和 XML 批量导入留作后续扩展。
