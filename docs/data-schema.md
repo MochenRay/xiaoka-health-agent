@@ -43,13 +43,42 @@
         "type": "swimming",
         "duration_min": 40,
         "calories": 320,
-        "source": "apple_health_screenshot"
+        "active_energy_kcal": 320,
+        "distance_km": 1.2,
+        "start_time": "19:20",
+        "end_time": "20:00",
+        "source": "apple_watch_workout_screenshot",
+        "confidence": "high",
+        "note": ""
       }
     ]
   },
+  "activity_summary": {
+    "active_energy_kcal": 520,
+    "source": "apple_health_activity_screenshot",
+    "confidence": "medium",
+    "note": ""
+  },
+  "steps": {
+    "count": 8200,
+    "source": "apple_health_activity_screenshot"
+  },
   "sleep": {
     "duration_h": 7.5,
-    "quality": null
+    "source": "apple_health_sleep_screenshot",
+    "start_time": "23:40",
+    "end_time": "07:10",
+    "time_in_bed_h": 8.0,
+    "efficiency_pct": 94,
+    "stages": {
+      "awake_min": 20,
+      "rem_min": 95,
+      "core_min": 260,
+      "deep_min": 75
+    },
+    "quality": null,
+    "confidence": "medium",
+    "note": ""
   },
   "supplements": ["vitamin_d_2000iu", "creatine_5g", "omega3"],
   "notes": ""
@@ -78,11 +107,44 @@
 | `exercise.activities[].type` | string | 是(per act) | 运动类型 |
 | `exercise.activities[].duration_min` | number | 否 | 时长（分钟） |
 | `exercise.activities[].calories` | number | 否 | 消耗热量 |
-| `exercise.activities[].source` | string | 否 | 数据来源 |
+| `exercise.activities[].active_energy_kcal` | number | 否 | 截图识别出的 active calories；无设备数据时可为空 |
+| `exercise.activities[].source` | string | 否 | "manual" / "apple_watch_workout_screenshot" / "apple_health_workout_screenshot" |
+| `exercise.activities[].start_time` | string | 否 | 开始时间 HH:MM，截图可识别时填写 |
+| `exercise.activities[].end_time` | string | 否 | 结束时间 HH:MM，截图可识别时填写 |
+| `exercise.activities[].distance_km` | number | 否 | 距离（km），截图可识别时填写 |
+| `exercise.activities[].steps` | number | 否 | 该次活动步数，截图可识别时填写 |
+| `exercise.activities[].confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
+| `exercise.activities[].note` | string | 否 | 备注或用户确认信息 |
+| `activity_summary.active_energy_kcal` | number | 否 | 活动摘要截图里的日级 active energy；不是单次 workout |
+| `activity_summary.source` | string | 否 | "apple_health_activity_screenshot" / "apple_watch_activity_screenshot" / "manual" |
+| `activity_summary.confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
+| `activity_summary.note` | string | 否 | 备注或用户确认信息 |
+| `steps.count` | number | 否 | 当日步数；未记录则 steps 可为空 |
+| `steps.source` | string | 否 | "manual" / "apple_health_activity_screenshot" / "apple_watch_activity_screenshot" |
 | `sleep.duration_h` | number | 否 | 睡眠时长（小时） |
+| `sleep.source` | string | 否 | "manual" / "apple_watch_sleep_screenshot" / "apple_health_sleep_screenshot" |
+| `sleep.start_time` | string | 否 | 睡眠开始时间 HH:MM，截图可识别时填写 |
+| `sleep.end_time` | string | 否 | 睡眠结束时间 HH:MM，截图可识别时填写 |
+| `sleep.time_in_bed_h` | number | 否 | 卧床时间（小时），截图可识别时填写 |
+| `sleep.efficiency_pct` | number | 否 | 睡眠效率百分比，截图可识别时填写 |
+| `sleep.stages.awake_min` | number | 否 | 清醒分钟数 |
+| `sleep.stages.rem_min` | number | 否 | REM 睡眠分钟数 |
+| `sleep.stages.core_min` | number | 否 | 核心睡眠分钟数 |
+| `sleep.stages.deep_min` | number | 否 | 深睡分钟数 |
 | `sleep.quality` | string | 否 | "good" / "fair" / "poor" / null |
+| `sleep.confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
+| `sleep.note` | string | 否 | 备注或用户确认信息 |
 | `supplements` | array | 否 | 补剂列表（格式：名称_剂量） |
 | `notes` | string | 否 | 备注 |
+
+### 截图优先字段约定
+
+- Apple Watch / Apple Health 截图字段都是可选增强字段，不要求历史批量导入。
+- `exercise.activities[]` 只记录单次 workout；活动/步数/消耗摘要截图写入 `activity_summary` 与 `steps`，不要伪装成单次运动。
+- 运动截图必须能识别日期、运动类型、时长、active calories 和来源；活动摘要截图必须能识别日期、steps 或 active calories、来源；睡眠截图必须能识别日期、睡眠时长和来源。
+- 若必填识别项缺失或 `confidence` 为 `low`，Agent 应先向用户确认，不应自行补全。
+- 日级可选对象如 `nutrition`、`exercise`、`activity_summary`、`steps`、`sleep` 可缺省或为 `null`；不要用 `0` 代表未知。
+- 本 schema 不定义 XML、CSV 或 parser staging schema；未来如做批量导入再单独扩展。
 
 ## 自建食物库 JSON
 

@@ -7,7 +7,7 @@
 - Agent 核心工作流已可用：初始化、饮食、体重、体检、运动、补剂、睡眠、自建食物库、目标更新。
 - OpenClaw 自动化已启用：零点结算、结算校验、前日汇总、周报、月报。
 - 周报/月报已通过零覆盖场景验证：无数据时生成 `0/N` 报告文件，并输出 `NO_REPLY`，不会打扰 Telegram。
-- Apple Health 批量导入 parser 还没做；现在支持运动描述和 Apple Watch 截图录入，不支持稳定导入历史数据。
+- Phase 2C 最小闭环采用截图优先：已定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同；端到端截图 fixture 验证仍待补齐，暂不做历史批量导入或 parser。
 
 ## 它能做什么
 
@@ -17,9 +17,9 @@
 | **饮食记录** | 文字、食物照片、菜单截图 → 估算热量和宏量 → 写入当日日志 |
 | **体重追踪** | 记录体重，计算 7 天均值、30 天趋势和目标差距 |
 | **体检解读** | 识别体检报告照片或文字指标，标注异常，保存到 `workspace/medical/` |
-| **运动记录** | 记录运动描述或 Apple Watch 截图，估算消耗并写入日志 |
+| **运动/活动记录** | 记录手动运动描述，或从单张 Apple Watch / Apple Health 运动截图提取日期、类型、时长、active calories 和来源；活动摘要截图只记录日级步数/消耗 |
 | **补剂管理** | 记录补剂和剂量，检查补剂-药物冲突，必要时给出安全提醒 |
-| **睡眠记录** | 记录睡眠时长和质量；数据足够时可做近期睡眠分析 |
+| **睡眠记录** | 记录睡眠时长和质量，或从单张 Apple Watch / Apple Health 睡眠截图提取日期、时长和来源 |
 | **自建食物库** | 从营养成分表照片提取数据，确认后写入个人食物库 |
 | **目标更新** | 修改体重、热量、宏量目标，并重算 BMR/TDEE |
 | **健康问答** | 基于仓库里的营养、医学、药物、补剂、运动、设备知识库回答问题 |
@@ -43,7 +43,9 @@
 
 - 不做食品条码扫描（薄荷健康做得更好）
 - 不做实时运动追踪（Apple Watch 做得更好）
-- 不做 Apple Health 历史数据批量导入（parser 还没实现）
+- 当前版本不做 Apple Health 历史批量导入
+- 当前版本不做 Health Auto Export 自动同步
+- 当前版本不做 Apple Health 原生 XML parser
 - 不提供医疗诊断或处方
 - 不在数据不足时硬编趋势结论
 
@@ -110,7 +112,7 @@ xiaoka-health-agent/
 ├── references/           ← 知识库（营养/医学/药物/补剂/运动/设备）
 ├── config/               ← 配置模板（profile + goals）
 ├── templates/            ← 日志和报告模板
-├── scripts/              ← 预留：Phase 2 工具脚本（当前仅占位说明）
+├── scripts/              ← Phase 2 工具脚本与 fixture 校验
 ├── workspace/            ← 用户数据（logs/data/medical/reports/food-library）
 ├── docs/                 ← 路径合同、Schema、运行态规格、知识库来源
 ├── deploy/               ← 部署指南（OpenClaw / Claude Code）
@@ -154,6 +156,7 @@ OpenClaw `cron` 运行态规格见 [docs/openclaw-runtime.md](docs/openclaw-runt
 
 - 支持中文健康记录与较强的指令遵循
 - 如需处理照片、截图、营养标签或体检单，必须支持图片输入
+- Apple Watch / Apple Health 截图记录依赖可靠的 Vision/OCR；如果运行模型不能稳定读图，用户需要手动转写日期、来源、类型、时长、active calories 或睡眠时长等关键字段
 - 能稳定遵守本仓库的文件读写路径合同
 
 具体模型以部署环境可用项为准；OpenClaw 中可用 `openclaw agents list --bindings` 查看当前 `xiaoka` 配置。

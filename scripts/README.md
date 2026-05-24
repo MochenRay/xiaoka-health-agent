@@ -1,6 +1,6 @@
 # Scripts
 
-此目录预留给 Phase 2 之后的辅助脚本。
+此目录用于 Phase 2 之后的辅助脚本。
 
 当前仓库的 Phase 1 最小可用不依赖任何脚本，重点是：
 
@@ -8,8 +8,12 @@
 - `references/` 知识库
 - `config/`、`templates/`、`workspace/` 的运行时约定
 
+当前已有脚本：
+
+- `validate_phase2b_fixtures.py`：校验 Phase 2B synthetic 周报/月报 fixtures。
+
 后续可能放入这里的脚本包括：
 
-- Apple Health 导出解析
+- Apple Health 导出解析（未来可选方向；当前 Phase 2C 不实现）
 - 历史数据迁移
 - JSON 结算校验辅助工具

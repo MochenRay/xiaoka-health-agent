@@ -1,8 +1,8 @@
 # 小卡健康 Agent 项目路线图清单
 
 > 审计时间：2026-05-24 CST
-> 当前仓库基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `8337077`
-> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `8337077`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
+> 当前仓库基线：`/Users/rayli/.config/superpowers/worktrees/xiaoka-health-agent/codex-xiaoka-phase2b2c`，分支 `codex/xiaoka-phase2b2c`，HEAD `6db7793`
+> 远端运行态抽查：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `6db7793`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
 
 ## 文档语言约定
@@ -29,7 +29,7 @@
   - `/Users/rayli/health-coach/docs/superpowers/plans/2026-03-25-xiaoka-phase1.md`
 - 本次审计已核实事项：
   - `references/cn-food-db.json` 当前为 `1657` 条记录；`README.md` 与 `docs/knowledge-base-sources.md` 已从旧数值 `1677` 修正。
-  - `SKILL.md` 当前 `170` 行，符合旧约束 `<=200` 行。
+  - `SKILL.md` 当前 `180` 行，符合旧约束 `<=200` 行。
   - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证；2026-05-24 复核时五条 cron 最近状态均为 `ok`。
   - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；共享层旧模型口径已需要刷新。
 
@@ -49,7 +49,7 @@
 - [x] 医学分析层：体检/血检、补剂、GLP-1、运动、睡眠、趋势分析。
 - [x] 输入方式面向真实使用：文字、图片/截图、Telegram/OpenClaw 对话。
 - [x] 安全边界明确：不做诊断，不开处方；医学建议必须附免责声明。
-- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖场景已验证；样例数据场景、Apple Health 导入与回归 fixtures 尚未完成。
+- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖场景已验证；样例数据场景、Phase 2C 截图录入闭环与回归 fixtures 尚未完成。
 - [ ] 跨维度洞察尚未闭环：PRD 已定义方向，当前仍未打通数据、报告、长期趋势。
 
 ## 旧计划拆期
@@ -78,7 +78,7 @@
 
 ### 原阶段 2：自动化与报告
 
-目标：打通每日、每周、每月自动化，再加入 Apple Health 导入。
+目标：打通每日、每周、每月自动化，再加入 Apple Watch / Apple Health 截图优先录入。
 
 原计划交付：
 
@@ -92,11 +92,10 @@
 - [x] 定义月报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 零覆盖场景已验证。
 - [x] 定义周报/月报前缺失日期结算/补结算规则；runtime 零覆盖场景已验证。
-- [ ] 在 `scripts/` 下加入 Apple Health parser。
-- [ ] 处理 Apple Health 时区问题与临时文件清理。
+- [ ] 支持单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入。
 - [ ] 增加结算/报告回归用的样例数据或 fixtures。
 
-状态：**运行态已接上并自然运行；样例数据验证、Apple Health parser 与回归 fixtures 尚未完成**。
+状态：**运行态已接上并自然运行；样例数据验证、截图录入最小闭环与回归 fixtures 尚未完成**。
 
 ### 原阶段 3：深度分析
 
@@ -149,7 +148,7 @@ flowchart TD
   E --> I["月报"]
   H --> J["跨维度洞察"]
   I --> J
-  K["Apple Health parser"] --> E
+  K["截图录入运动/睡眠"] --> D
   L["profile/goals 模板"] --> B
   L --> M["药物/运动/睡眠个性化分析"]
   M --> J
@@ -166,7 +165,8 @@ flowchart TD
 - [x] 必须先有补结算/缺失日期逻辑，周报/月报才可靠。
 - [x] 必须先有运行态文档，再继续新增 OpenClaw cron job，避免 runtime 只存在聊天记录里。
 - [ ] 必须先稳定报告模板，跨维度洞察才有落点。
-- [ ] 必须先有 Apple Health parser，才能稳定把导出的运动/睡眠数据纳入趋势自动化。
+- [x] Phase 2C 第一版不依赖 parser；设计目标是截图记录先追加到每日 Markdown，再由现有零点结算进入每日 JSON。
+- [ ] 必须先有足够的运动/睡眠结构化 JSON，才能稳定纳入趋势自动化。
 - [ ] 必须先有测试样例，才能安全迭代结算/报告 prompt。
 
 软依赖：
@@ -245,14 +245,15 @@ flowchart TD
   - 周报/月报：`announce`；无数据输出 `NO_REPLY`
 - [x] 将手动验证命令写入文档。
 
-### Apple Health
+### Apple Watch / Apple Health 截图录入
 
-- [ ] 先决定第一版输入源：导出 XML、Health Auto Export CSV/JSON，或暂只支持截图。
-- [ ] 输入格式确定后再加入 `scripts/apple_health.py`。
-- [ ] 解析 workout、active energy、resting energy、steps、heart rate summary、sleep。
-- [ ] 若运行态按中国日期边界出报告，则统一到 Asia/Shanghai。
-- [ ] 将标准化结果写入 `workspace/data/`，或写入 schema 中定义的 staging path。
-- [ ] 增加不含个人健康数据的样例 fixture。
+- [x] 第一版输入源决策：选择截图优先；暂不做导出 XML、Health Auto Export CSV/JSON 或原生 parser。
+- [x] A4 定义 Apple Watch workout 截图、Apple Health workout/activity 截图和手动运动描述的录入合同。
+- [x] A4 定义 workout 截图提取日期、运动类型、时长、active calories、来源；活动摘要截图只进入日级 steps / active calories。
+- [x] A6 支持 Apple Watch / Apple Health 睡眠截图和手动睡眠记录。
+- [x] A6 从截图提取日期、睡眠时长、来源；可选开始/结束时间、卧床时间、效率、阶段、质量。
+- [x] 定义截图识别结果追加到当日日志的固定 Markdown 形状；端到端结算验证仍待完成。
+- [ ] 增加不含个人健康数据的截图/日志样例 fixture。
 
 ### 深度分析
 
@@ -327,20 +328,22 @@ flowchart TD
 - [x] 无数据分支不会产生 Telegram 噪音。
 - [ ] 非零样例数据场景可生成摘要并回写报告。
 
-### 阶段 2C：Apple Health 最小导入
+### 阶段 2C：Apple Watch / Apple Health 截图最小闭环
 
-目的：提供一条从 Apple Health 导出到标准数据的可重复路径。
+目的：先提供从单张截图到每日日志、再到每日 JSON 的可重复路径；不引入批量导入脚本。
 
-- [ ] 选择第一版支持的源格式。
-- [ ] 增加 parser 脚本。
+- [x] 选择第一版支持的源格式：截图优先。
+- [x] 更新 `SKILL.md` 的 A4/A6 截图识别与确认规则。
+- [x] 为截图字段补充 schema 文档。
+- [x] 增加 README 能力声明和模型要求。
+- [x] 区分 workout 截图与活动摘要截图，避免把步数/活动摘要写成单次运动。
 - [ ] 增加样例 fixture。
-- [ ] 为导入字段补充 schema 文档。
-- [ ] 增加 README 用法。
-- [ ] 验证时区与重复数据处理。
+- [ ] 验证截图记录能进入当日日志，并经现有结算进入每日 JSON。
 
 退出标准：
 
-- [ ] 一个样例导出可转为合法标准 JSON。
+- [ ] 一张运动/活动截图可转为当日日志记录，并在结算后成为合法标准 JSON。
+- [ ] 一张睡眠截图可转为当日日志记录，并在结算后成为合法标准 JSON。
 - [ ] 仓库不提交个人健康 fixture。
 
 ### 阶段 3A：跨维度洞察
@@ -383,7 +386,8 @@ flowchart TD
 
 ### 数据与集成
 
-- [ ] Health Auto Export 集成，用于定期导入 Apple Health CSV/JSON。
+- [ ] Apple Health 原生 XML parser，用于未来历史批量导入。
+- [ ] Health Auto Export 集成，用于未来定期导入 Apple Health CSV/JSON。
 - [ ] Withings/体脂秤导入体重与身体成分。
 - [ ] 食物照片复核模式：先估算，再请用户确认份量。
 - [ ] 营养标签 OCR 置信度与纠错流程。
@@ -418,7 +422,7 @@ flowchart TD
 
 - [x] **先做阶段 2A**：新增 `docs/openclaw-runtime.md`，修正文档漂移，把当前 cron 真相写入仓库。
 - [x] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
-- [ ] **再做阶段 2C**：Apple Health 最小导入。
+- [ ] **同时推进当前收口**：Phase 2B 非零样例数据 runtime 验证，Phase 2C 截图录入工作流。
 - [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
 
-原因：周报/月报依赖稳定每日 JSON；runtime 文档可减少重复漂移；Apple Health 与跨维度分析都应建立在可靠报告链之上。
+原因：周报/月报依赖稳定每日 JSON；runtime 文档可减少重复漂移；截图记录可先通过每日 Markdown 和现有结算链进入 JSON，parser、Health Auto Export 和 XML 批量导入留作后续扩展。

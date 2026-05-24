@@ -1,0 +1,30 @@
+{
+  "date": "2026-04-01",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 1810,
+    "protein_g": 92,
+    "carbs_g": 185,
+    "fat_g": 62,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 320,
+    "activities": [
+      {
+        "type": "synthetic_cardio",
+        "duration_min": 38,
+        "calories": 320,
+        "source": "synthetic_phase2b"
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 7.1,
+    "quality": "fair"
+  },
+  "supplements": [
+    "synthetic multivitamin placeholder"
+  ],
+  "notes": "SYNTHETIC_PHASE2B fixture only; fabricated non-zero report coverage sample, not real health data."
+}

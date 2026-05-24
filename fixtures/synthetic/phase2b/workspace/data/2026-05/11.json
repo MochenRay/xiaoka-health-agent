@@ -1,0 +1,30 @@
+{
+  "date": "2026-05-11",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 1885,
+    "protein_g": 96,
+    "carbs_g": 196,
+    "fat_g": 60,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 360,
+    "activities": [
+      {
+        "type": "synthetic_cardio",
+        "duration_min": 41,
+        "calories": 360,
+        "source": "synthetic_phase2b"
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 7.0,
+    "quality": "fair"
+  },
+  "supplements": [
+    "synthetic electrolyte placeholder"
+  ],
+  "notes": "SYNTHETIC_PHASE2B fixture only; fabricated weekly coverage sample, not real health data."
+}

@@ -1,0 +1,30 @@
+{
+  "date": "2026-04-02",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 1965,
+    "protein_g": 104,
+    "carbs_g": 210,
+    "fat_g": 66,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 410,
+    "activities": [
+      {
+        "type": "synthetic_strength",
+        "duration_min": 45,
+        "calories": 410,
+        "source": "synthetic_phase2b"
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 6.8,
+    "quality": "fair"
+  },
+  "supplements": [
+    "synthetic omega placeholder"
+  ],
+  "notes": "SYNTHETIC_PHASE2B fixture only; fabricated non-zero report coverage sample, not real health data."
+}

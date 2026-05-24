@@ -1,0 +1,30 @@
+{
+  "date": "2026-05-12",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 2030,
+    "protein_g": 110,
+    "carbs_g": 218,
+    "fat_g": 65,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 455,
+    "activities": [
+      {
+        "type": "synthetic_intervals",
+        "duration_min": 52,
+        "calories": 455,
+        "source": "synthetic_phase2b"
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 6.5,
+    "quality": "fair"
+  },
+  "supplements": [
+    "synthetic creatine placeholder"
+  ],
+  "notes": "SYNTHETIC_PHASE2B fixture only; fabricated weekly coverage sample, not real health data."
+}

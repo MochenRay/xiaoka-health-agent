@@ -176,3 +176,24 @@ ssh mac-mini 'openclaw cron list | grep xiaoka'
 - 月报 schedule 为每月 1 日早上，统计上一个完整自然月。
 - 无数据分支输出 `NO_REPLY`，避免 Telegram 噪音。
 - 用无数据与样例数据两类场景检查 `openclaw cron runs --id ...`。
+
+## Phase 2B Synthetic 非零验证待执行
+
+仓库已定义 Phase 2B synthetic fixture，用于验证周报/月报非零覆盖分支。
+截至本记录，本节只定义执行规范，不表示 Mac Mini runtime 已完成 synthetic
+验证。
+
+- fixture 来源：`fixtures/synthetic/phase2b/workspace/data/`
+- marker：每个 JSON 的 `notes` 必须包含 `SYNTHETIC_PHASE2B`
+- 周报目标：`2026-05-11..2026-05-17` 覆盖率 `3/7`
+- 月报目标：`2026-04` 覆盖率 `3/30`
+- 执行规范：见 [report-automation.md](report-automation.md) 的
+  “Phase 2B Mac Mini 安全验证步骤”
+
+执行前必须备份 `~/.openclaw/cron/jobs.json`、`workspace/data/2026-04`、
+`workspace/data/2026-05` 以及会被覆盖的 `workspace/reports/weekly-2026-05-17.md`
+和 `workspace/reports/monthly-2026-04.md`。写入 synthetic fixture 前必须检查目标
+日期 JSON 不存在；若存在则停止，不覆盖真实记录。因为周报、月报 delivery 为
+`announce`，手动运行可能发送 Telegram；记录验证结果时不得写真实 chat id，不得
+把 synthetic fixture 和真实健康数据混合归档。验证后必须把 generated report 归档到
+备份目录，并恢复原报告文件。

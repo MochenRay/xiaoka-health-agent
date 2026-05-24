@@ -1,0 +1,30 @@
+{
+  "date": "2026-05-13",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 1695,
+    "protein_g": 84,
+    "carbs_g": 168,
+    "fat_g": 54,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 240,
+    "activities": [
+      {
+        "type": "synthetic_walk",
+        "duration_min": 29,
+        "calories": 240,
+        "source": "synthetic_phase2b"
+      }
+    ]
+  },
+  "sleep": {
+    "duration_h": 7.8,
+    "quality": "good"
+  },
+  "supplements": [
+    "synthetic magnesium placeholder"
+  ],
+  "notes": "SYNTHETIC_PHASE2B fixture only; fabricated weekly coverage sample, not real health data."
+}
