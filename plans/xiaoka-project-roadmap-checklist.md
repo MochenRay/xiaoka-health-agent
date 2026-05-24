@@ -51,7 +51,7 @@
 - [x] 医学分析层：体检/血检、补剂、GLP-1、运动、睡眠、趋势分析。
 - [x] 输入方式面向真实使用：文字、图片/截图、Telegram/OpenClaw 对话。
 - [x] 安全边界明确：不做诊断，不开处方；医学建议必须附免责声明。
-- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖与 synthetic 非零场景已验证；Phase 2C 截图录入闭环与回归 fixtures 尚未完成。
+- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖与 synthetic 非零场景已验证；Phase 2C 截图录入已有 synthetic mapping fixture 验证，真实截图/OCR runtime 验证与更完整回归 fixtures 尚未完成。
 - [ ] 跨维度洞察尚未闭环：PRD 已定义方向，当前仍未打通数据、报告、长期趋势。
 
 ## 旧计划拆期
@@ -94,10 +94,10 @@
 - [x] 定义月报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 零覆盖场景已验证。
 - [x] 定义周报/月报前缺失日期结算/补结算规则；runtime 零覆盖场景已验证。
-- [ ] 支持单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入。
-- [ ] 增加结算/报告回归用的样例数据或 fixtures。
+- [x] 定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同。
+- [x] 增加结算/报告回归用的样例数据或 fixtures。
 
-状态：**运行态已接上并自然运行；零覆盖与 synthetic 非零报告验证已完成，截图录入最小闭环与回归 fixtures 尚未完成**。
+状态：**运行态已接上并自然运行；零覆盖、synthetic 非零报告验证和截图录入 synthetic mapping fixture 验证已完成，真实截图/OCR runtime 验证与更完整回归 fixtures 尚未完成**。
 
 ### 原阶段 3：深度分析
 
@@ -254,8 +254,8 @@ flowchart TD
 - [x] A4 定义 workout 截图提取日期、运动类型、时长、active calories、来源；活动摘要截图只进入日级 steps / active calories。
 - [x] A6 支持 Apple Watch / Apple Health 睡眠截图和手动睡眠记录。
 - [x] A6 从截图提取日期、睡眠时长、来源；可选开始/结束时间、卧床时间、效率、阶段、质量。
-- [x] 定义截图识别结果追加到当日日志的固定 Markdown 形状；端到端结算验证仍待完成。
-- [ ] 增加不含个人健康数据的截图/日志样例 fixture。
+- [x] 定义截图识别结果追加到当日日志的固定 Markdown 形状，并用 synthetic mapping fixture 验证到 expected JSON 的映射。
+- [x] 增加不含个人健康数据的截图/日志样例 fixture。
 
 ### 深度分析
 
@@ -339,14 +339,14 @@ flowchart TD
 - [x] 为截图字段补充 schema 文档。
 - [x] 增加 README 能力声明和模型要求。
 - [x] 区分 workout 截图与活动摘要截图，避免把步数/活动摘要写成单次运动。
-- [ ] 增加样例 fixture。
-- [ ] 验证截图记录能进入当日日志，并经现有结算进入每日 JSON。
+- [x] 增加样例 fixture。
+- [x] 用 synthetic mapping fixture 验证已确认截图识别结果能进入当日日志，并映射到 expected 每日 JSON。
 
 退出标准：
 
-- [ ] 一张运动/活动截图可转为当日日志记录，并在结算后成为合法标准 JSON。
-- [ ] 一张睡眠截图可转为当日日志记录，并在结算后成为合法标准 JSON。
-- [ ] 仓库不提交个人健康 fixture。
+- [x] 一张运动/活动截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
+- [x] 一张睡眠截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
+- [x] 仓库不提交个人健康 fixture。
 
 ### 阶段 3A：跨维度洞察
 
@@ -415,7 +415,7 @@ flowchart TD
 ### 工程化
 
 - [ ] Mac Mini OpenClaw runtime smoke test 脚本。
-- [ ] 每日/周报/月报 synthetic fixtures。
+- [x] 每日/周报/月报 synthetic fixtures。
 - [ ] 结算 JSON 的 prompt 回归测试。
 - [ ] JSON schema validation。
 - [ ] 可选：从 `workspace/data/` 生成静态 dashboard。
@@ -425,7 +425,7 @@ flowchart TD
 - [x] **先做阶段 2A**：新增 `docs/openclaw-runtime.md`，修正文档漂移，把当前 cron 真相写入仓库。
 - [x] **再做阶段 2B runtime**：经外显动作确认后，启用并验证周报/月报 cron jobs。
 - [x] **修复 Mac Mini 网络/代理后重跑 Phase 2B 非零样例数据 runtime 验证**。
-- [ ] **补 Phase 2C 截图录入 fixture 与结算验证**。
+- [x] **补 Phase 2C 已确认截图识别结果 mapping fixture 验证**。
 - [ ] **再做阶段 3A**：在稳定报告之上做跨维度洞察。
 
-原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步，runtime 零覆盖与 synthetic 非零场景均已验证。下一步应把截图记录通过每日 Markdown 和现有结算链进入 JSON；parser、Health Auto Export 和 XML 批量导入留作后续扩展。
+原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步，runtime 零覆盖与 synthetic 非零场景均已验证，截图先行路径也已用 synthetic recognized fixture 验证到 expected JSON。下一步可以做真实截图/OCR runtime smoke test，或转入 C8 跨维度洞察；parser、Health Auto Export 和 XML 批量导入留作后续扩展。

@@ -7,7 +7,7 @@
 - Agent 核心工作流已可用：初始化、饮食、体重、体检、运动、补剂、睡眠、自建食物库、目标更新。
 - OpenClaw 自动化已启用：零点结算、结算校验、前日汇总、周报、月报。
 - 周报/月报已通过零覆盖场景验证：无数据时生成 `0/N` 报告文件，并输出 `NO_REPLY`，不会打扰 Telegram。
-- Phase 2C 最小闭环采用截图优先：已定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同；端到端截图 fixture 验证仍待补齐，暂不做历史批量导入或 parser。
+- Phase 2C 最小闭环采用截图优先：已定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同，并用 synthetic fixture 验证“已确认截图识别结果 → Markdown 日志 → expected 标准 JSON”的本地映射；暂不做历史批量导入或 parser。
 
 ## 它能做什么
 
@@ -149,6 +149,17 @@ Phase 1 的最小可用约定见 [docs/phase1-minimum-contract.md](docs/phase1-m
 
 OpenClaw `cron` 运行态规格见 [docs/openclaw-runtime.md](docs/openclaw-runtime.md)。
 周报/月报自动化规格见 [docs/report-automation.md](docs/report-automation.md)。
+
+## Fixture 验证
+
+仓库内 synthetic fixtures 不含个人健康数据：
+
+```bash
+python3 scripts/validate_phase2b_fixtures.py
+python3 scripts/validate_phase2c_screenshot_fixtures.py
+```
+
+Phase 2C fixture 只验证已确认截图识别结果的记录合同，不验证 OCR 质量、真实图片渲染、runtime 结算、Apple Health XML、Health Auto Export 或历史批量导入。
 
 ## 模型选择
 

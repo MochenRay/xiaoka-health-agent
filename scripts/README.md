@@ -11,6 +11,9 @@
 当前已有脚本：
 
 - `validate_phase2b_fixtures.py`：校验 Phase 2B synthetic 周报/月报 fixtures。
+- `validate_phase2c_screenshot_fixtures.py`：校验 Phase 2C screenshot-first
+  synthetic fixtures，覆盖已确认截图识别结果到 Markdown 日志和 expected
+  daily JSON 的字段映射；不验证 OCR 或 runtime 结算。
 
 后续可能放入这里的脚本包括：
 

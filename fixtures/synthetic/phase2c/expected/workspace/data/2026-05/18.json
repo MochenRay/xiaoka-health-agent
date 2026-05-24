@@ -1,0 +1,52 @@
+{
+  "date": "2026-05-18",
+  "weight": null,
+  "nutrition": null,
+  "exercise": {
+    "total_burn": 310,
+    "activities": [
+      {
+        "type": "户外步行",
+        "duration_min": 42,
+        "calories": 310,
+        "active_energy_kcal": 310,
+        "steps": 5200,
+        "distance_km": 3.4,
+        "start_time": "18:42",
+        "end_time": "19:24",
+        "source": "apple_watch_workout_screenshot",
+        "confidence": "high",
+        "note": "SYNTHETIC_PHASE2C confirmed workout screenshot"
+      }
+    ]
+  },
+  "activity_summary": {
+    "active_energy_kcal": 580,
+    "source": "apple_health_activity_screenshot",
+    "confidence": "high",
+    "note": "SYNTHETIC_PHASE2C confirmed day-level activity summary"
+  },
+  "steps": {
+    "count": 9860,
+    "source": "apple_health_activity_screenshot"
+  },
+  "sleep": {
+    "duration_h": 7.4,
+    "source": "apple_health_sleep_screenshot",
+    "start_time": "23:36",
+    "end_time": "07:02",
+    "time_in_bed_h": 7.8,
+    "efficiency_pct": 95,
+    "stages": {
+      "awake_min": 12,
+      "rem_min": 92,
+      "core_min": 276,
+      "deep_min": 64
+    },
+    "quality": null,
+    "confidence": "high",
+    "note": "SYNTHETIC_PHASE2C confirmed sleep screenshot"
+  },
+  "supplements": [],
+  "notes": "SYNTHETIC_PHASE2C fixture only; fabricated screenshot-first settlement sample, not real health data."
+}

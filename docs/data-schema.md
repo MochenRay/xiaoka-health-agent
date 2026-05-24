@@ -144,6 +144,7 @@
 - 运动截图必须能识别日期、运动类型、时长、active calories 和来源；活动摘要截图必须能识别日期、steps 或 active calories、来源；睡眠截图必须能识别日期、睡眠时长和来源。
 - 若必填识别项缺失或 `confidence` 为 `low`，Agent 应先向用户确认，不应自行补全。
 - 日级可选对象如 `nutrition`、`exercise`、`activity_summary`、`steps`、`sleep` 可缺省或为 `null`；不要用 `0` 代表未知。
+- Synthetic screenshot-first fixture 位于 `fixtures/synthetic/phase2c/`，只验证已确认识别结果到 Markdown 与 expected JSON 的字段映射，不验证 OCR 质量或 runtime 结算。
 - 本 schema 不定义 XML、CSV 或 parser staging schema；未来如做批量导入再单独扩展。
 
 ## 自建食物库 JSON

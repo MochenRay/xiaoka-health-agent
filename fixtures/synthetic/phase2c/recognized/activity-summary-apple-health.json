@@ -1,0 +1,10 @@
+{
+  "marker": "SYNTHETIC_PHASE2C",
+  "kind": "activity_summary",
+  "source": "apple_health_activity_screenshot",
+  "date": "2026-05-18",
+  "steps": 9860,
+  "active_energy_kcal": 580,
+  "confidence": "high",
+  "note": "Fabricated day-level activity summary result for fixture validation; not a single workout."
+}

@@ -1,0 +1,15 @@
+{
+  "marker": "SYNTHETIC_PHASE2C",
+  "kind": "workout",
+  "source": "apple_watch_workout_screenshot",
+  "date": "2026-05-18",
+  "type": "户外步行",
+  "duration_min": 42,
+  "active_energy_kcal": 310,
+  "steps": 5200,
+  "distance_km": 3.4,
+  "start_time": "18:42",
+  "end_time": "19:24",
+  "confidence": "high",
+  "note": "Fabricated recognized screenshot result for fixture validation; not real health data."
+}

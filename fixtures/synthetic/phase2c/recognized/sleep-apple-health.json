@@ -1,0 +1,20 @@
+{
+  "marker": "SYNTHETIC_PHASE2C",
+  "kind": "sleep",
+  "source": "apple_health_sleep_screenshot",
+  "date": "2026-05-18",
+  "duration_h": 7.4,
+  "start_time": "23:36",
+  "end_time": "07:02",
+  "time_in_bed_h": 7.8,
+  "efficiency_pct": 95,
+  "stages": {
+    "awake_min": 12,
+    "rem_min": 92,
+    "core_min": 276,
+    "deep_min": 64
+  },
+  "quality": null,
+  "confidence": "high",
+  "note": "Fabricated recognized sleep screenshot result for fixture validation; not real health data."
+}
