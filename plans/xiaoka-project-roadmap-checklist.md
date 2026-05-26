@@ -276,12 +276,12 @@ flowchart TD
 
 ### 质量门禁
 
-- [ ] 增加轻量仓库校验脚本：
-  - Markdown 链接。
-  - JSON 合法性。
-  - reference metadata 是否存在。
-  - `SKILL.md` 行数。
-  - 非兼容性说明处不应再出现旧根目录运行态路径。
+- [x] 增加轻量仓库校验脚本：`scripts/validate_repository_contract.py`。
+  - [x] Markdown 本地链接。
+  - [x] tracked JSON 合法性。
+  - [x] `references/*.md` metadata 是否存在。
+  - [x] `SKILL.md` 行数。
+  - [x] 旧根目录运行态路径只允许出现在兼容、禁止、废弃、迁移等语境中。
 - [ ] 增加非私人路径下的样例数据。
 - [ ] 增加 Mac Mini OpenClaw pull 后的人工验收 checklist。
 - [ ] 增加公开发布 checklist。

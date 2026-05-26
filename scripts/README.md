@@ -17,6 +17,9 @@
 - `validate_phase3a_c8_fixtures.py`：校验 Phase 3A C8 synthetic fixture
   shape、expected report 的 `## 跨维度观察` section wording，以及 selected
   source-backed metrics。
+- `validate_repository_contract.py`：校验仓库级轻量合同，包括 Markdown 本地链接、
+  tracked JSON 合法性、`references/*.md` metadata、`SKILL.md` 行数，以及旧根目录
+  runtime 路径只出现在兼容/禁止语境中。
 
 后续可能放入这里的脚本包括：
 
