@@ -47,6 +47,8 @@
 
 ## B. 深度分析与报告接入
 
+> Worker B note 2026-05-27: 本切片补 repo 层 M1/E1/S1 报告合同、daily JSON 可选摘要字段、周/月报模板入口和 synthetic 示例，覆盖 R21-R27 的静态文档与样例基础；不要仅凭本切片关闭 runtime/report generation 或真实 workflow wiring。
+
 - [ ] R21. 增加 M1/E1/S1 的结构化测试样例与示例输出。来源：Roadmap L121。
 - [ ] R22. 增加 M1/E1/S1 的结构化输出示例。来源：Roadmap L277。
 - [ ] R23. 将 M1/E1/S1 稳定接入周报/月报模板。来源：Roadmap L122。

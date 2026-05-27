@@ -81,6 +81,73 @@
     "note": ""
   },
   "supplements": ["vitamin_d_2000iu", "creatine_5g", "omega3"],
+  "analysis_summaries": {
+    "m1_medication": {
+      "workflow": "M1",
+      "version": "phase3b-static-v1",
+      "status": "background_only",
+      "period": {
+        "start": "2026-03-24",
+        "end": "2026-03-24"
+      },
+      "source_scope": ["config/profile.md", "config/goals.md"],
+      "summary": "仅有用药/补剂背景，未做药物效果或剂量判断。",
+      "trend_inputs": {
+        "medication_status": "unknown",
+        "supplement_status": "recorded",
+        "adherence_recorded": false,
+        "monitoring_needed": false,
+        "clinician_review_needed": false,
+        "interaction_flags": []
+      },
+      "flags": [],
+      "report_carry_forward": false
+    },
+    "e1_exercise": {
+      "workflow": "E1",
+      "version": "phase3b-static-v1",
+      "status": "ready",
+      "period": {
+        "start": "2026-03-24",
+        "end": "2026-03-24"
+      },
+      "source_scope": ["workspace/data/2026-03/24.json", "config/profile.md", "config/goals.md"],
+      "summary": "本日有 1 次游泳记录，未发现来源明确的伤病冲突。",
+      "trend_inputs": {
+        "sessions": 1,
+        "total_duration_min": 40,
+        "total_active_energy_kcal": 320,
+        "dominant_types": ["swimming"],
+        "equipment_used": [],
+        "injury_constraints_respected": true,
+        "progression_signal": "insufficient_data"
+      },
+      "flags": [],
+      "report_carry_forward": false
+    },
+    "s1_sleep": {
+      "workflow": "S1",
+      "version": "phase3b-static-v1",
+      "status": "ready",
+      "period": {
+        "start": "2026-03-24",
+        "end": "2026-03-24"
+      },
+      "source_scope": ["workspace/data/2026-03/24.json", "config/profile.md", "config/goals.md"],
+      "summary": "本日睡眠 7.5 小时，单日数据不做趋势判断。",
+      "trend_inputs": {
+        "sleep_days": 1,
+        "avg_duration_h": 7.5,
+        "target_duration_h": null,
+        "avg_efficiency_pct": 94,
+        "regularity_signal": "insufficient_data",
+        "late_sleep_days": null,
+        "recovery_signal": "insufficient_data"
+      },
+      "flags": [],
+      "report_carry_forward": false
+    }
+  },
   "notes": ""
 }
 ```
@@ -135,7 +202,29 @@
 | `sleep.confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
 | `sleep.note` | string | 否 | 备注或用户确认信息 |
 | `supplements` | array | 否 | 补剂列表（格式：名称_剂量） |
+| `analysis_summaries` | object | 否 | M1/E1/S1 深度分析结构化摘要；可缺省 |
+| `analysis_summaries.m1_medication` | object | 否 | 药物/补剂摘要；只记录来源明确的状态、提醒和报告摘要 |
+| `analysis_summaries.e1_exercise` | object | 否 | 运动深度摘要；可复用训练次数、时长、伤病边界等趋势输入 |
+| `analysis_summaries.s1_sleep` | object | 否 | 睡眠深度摘要；可复用睡眠天数、均值、效率、规律性等趋势输入 |
+| `analysis_summaries.*.workflow` | string | 是(when present) | "M1" / "E1" / "S1" |
+| `analysis_summaries.*.version` | string | 是(when present) | 合同或 prompt 版本，当前为 "phase3b-static-v1" |
+| `analysis_summaries.*.status` | string | 是(when present) | "not_run" / "insufficient_data" / "background_only" / "ready" / "needs_review" |
+| `analysis_summaries.*.period` | object | 否 | 摘要覆盖日期，包含 `start` / `end` |
+| `analysis_summaries.*.source_scope` | array | 否 | 实际读取的来源路径或结构化来源；不得列未读取来源 |
+| `analysis_summaries.*.summary` | string | 否 | 可进入周报/月报的一句话摘要；必须弱断言 |
+| `analysis_summaries.*.trend_inputs` | object | 否 | 供趋势聚合复用的结构化指标；未知值用 null 或缺省 |
+| `analysis_summaries.*.flags` | array | 否 | 来源明确的安全提醒；无则为空数组 |
+| `analysis_summaries.*.report_carry_forward` | boolean | 否 | 是否允许后续报告在无更新时复用该摘要；默认 false |
 | `notes` | string | 否 | 备注 |
+
+### 深度分析摘要约定
+
+- `analysis_summaries` 只保存 M1/E1/S1 的结构化摘要，不保存原始对话，不替代 daily JSON 原始字段。
+- M1 不得从体重、热量或睡眠变化反推药物效果；若没有明确每日用药记录，`adherence_recorded` 必须为 `false` 或缺省。
+- E1 可复用 `exercise`、`activity_summary`、`steps` 作为训练趋势输入；运动记录少于 3 天时，`progression_signal` 应为 `insufficient_data`。
+- S1 可复用 `sleep` 字段做趋势输入；睡眠记录少于 3 天时，`regularity_signal` 应为 `insufficient_data`。
+- 药物、体检、睡眠红旗内容只能作为提醒，不构成诊断、处方或自行调整剂量建议。
+- 详细报告合同见 `docs/deep-analysis-report-contract.md`。
 
 ### 截图优先字段约定
 

@@ -1,0 +1,138 @@
+{
+  "date": "2026-07-01",
+  "weight": null,
+  "nutrition": {
+    "total_calories": 2100,
+    "protein_g": 140,
+    "carbs_g": 210,
+    "fat_g": 70,
+    "meals": []
+  },
+  "exercise": {
+    "total_burn": 180,
+    "activities": [
+      {
+        "type": "walking",
+        "duration_min": 35,
+        "calories": 180,
+        "active_energy_kcal": 180,
+        "distance_km": 2.8,
+        "start_time": "18:30",
+        "end_time": "19:05",
+        "source": "manual",
+        "confidence": "high",
+        "note": "SYNTHETIC_PHASE3B fabricated walking record"
+      }
+    ]
+  },
+  "activity_summary": {
+    "active_energy_kcal": 360,
+    "source": "manual",
+    "confidence": "high",
+    "note": "SYNTHETIC_PHASE3B fabricated activity summary"
+  },
+  "steps": {
+    "count": 7600,
+    "source": "manual"
+  },
+  "sleep": {
+    "duration_h": 7.1,
+    "source": "manual",
+    "start_time": "23:50",
+    "end_time": "06:56",
+    "time_in_bed_h": null,
+    "efficiency_pct": null,
+    "stages": null,
+    "quality": "fair",
+    "confidence": "high",
+    "note": "SYNTHETIC_PHASE3B fabricated sleep record"
+  },
+  "supplements": [
+    "synthetic_creatine_5g"
+  ],
+  "analysis_summaries": {
+    "m1_medication": {
+      "workflow": "M1",
+      "version": "phase3b-static-v1",
+      "status": "background_only",
+      "period": {
+        "start": "2026-07-01",
+        "end": "2026-07-01"
+      },
+      "source_scope": [
+        "config/profile.template.md",
+        "config/goals.template.md"
+      ],
+      "summary": "SYNTHETIC_PHASE3B: only medication and supplement background is represented; no medication effect, adherence, or dose judgment is made.",
+      "trend_inputs": {
+        "medication_status": "none_recorded",
+        "supplement_status": "recorded",
+        "adherence_recorded": false,
+        "monitoring_needed": false,
+        "clinician_review_needed": false,
+        "interaction_flags": []
+      },
+      "flags": [],
+      "report_carry_forward": false
+    },
+    "e1_exercise": {
+      "workflow": "E1",
+      "version": "phase3b-static-v1",
+      "status": "insufficient_data",
+      "period": {
+        "start": "2026-07-01",
+        "end": "2026-07-01"
+      },
+      "source_scope": [
+        "workspace/data/2026-07/01.json",
+        "config/profile.template.md",
+        "config/goals.template.md"
+      ],
+      "summary": "SYNTHETIC_PHASE3B: one walking record can be summarized, but training trend is not assessed.",
+      "trend_inputs": {
+        "sessions": 1,
+        "total_duration_min": 35,
+        "total_active_energy_kcal": 180,
+        "dominant_types": [
+          "walking"
+        ],
+        "equipment_used": [
+          "bodyweight"
+        ],
+        "injury_constraints_respected": null,
+        "progression_signal": "insufficient_data"
+      },
+      "flags": [
+        "injury_background_not_recorded"
+      ],
+      "report_carry_forward": false
+    },
+    "s1_sleep": {
+      "workflow": "S1",
+      "version": "phase3b-static-v1",
+      "status": "insufficient_data",
+      "period": {
+        "start": "2026-07-01",
+        "end": "2026-07-01"
+      },
+      "source_scope": [
+        "workspace/data/2026-07/01.json",
+        "config/profile.template.md",
+        "config/goals.template.md"
+      ],
+      "summary": "SYNTHETIC_PHASE3B: one sleep record can be summarized, but sleep regularity and trend are not assessed.",
+      "trend_inputs": {
+        "sleep_days": 1,
+        "avg_duration_h": 7.1,
+        "target_duration_h": null,
+        "avg_efficiency_pct": null,
+        "regularity_signal": "insufficient_data",
+        "late_sleep_days": null,
+        "recovery_signal": "insufficient_data"
+      },
+      "flags": [],
+      "report_carry_forward": false
+    }
+  },
+  "notes": "SYNTHETIC_PHASE3B fabricated daily JSON for contract validation; not real health data."
+}
