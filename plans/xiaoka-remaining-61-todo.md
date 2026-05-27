@@ -14,25 +14,36 @@
 ## A. Runtime Smoke 与测试底座
 
 - [ ] R01. 完成真实截图/OCR runtime 验证，并补更完整回归 fixtures。来源：Roadmap L59。
+  - Worker A 2026-05-27：真实 OCR runtime smoke 递延到用户集中测试；本轮只补仓库侧 fixture/schema validator 与边界文档，见 `docs/runtime-smoke-boundary.md`。
 - [ ] R02. 执行“真实截图/OCR runtime smoke”这个当前最佳下一步。来源：Roadmap L452。
+  - Worker A 2026-05-27：不运行真实 OpenClaw cron、不触发 Telegram；执行条件记录在 `docs/runtime-smoke-boundary.md`。
 - [ ] R03. 积累或构造足够运动/睡眠结构化 JSON，作为趋势自动化输入。来源：Roadmap L181。
 - [ ] R04. 增加非私人路径下的样例数据。来源：Roadmap L289。
 - [ ] R05. 增加测试样例，让结算/报告 prompt 可安全迭代。来源：Roadmap L182。
 - [ ] R06. 增加结算 JSON 的 prompt 回归测试。来源：Roadmap L438。
-- [ ] R07. 增加 JSON schema validation。来源：Roadmap L439。
+- [x] R07. 增加 JSON schema validation。来源：Roadmap L439。
+  - Worker A 2026-05-27：已新增 `scripts/validate_daily_json_schema.py`，覆盖 non-private synthetic daily JSON fixture 的日期、可选对象/null 字段、关键数值字段与 synthetic/no-real-person 合同。
 - [ ] R08. 增加 Mac Mini OpenClaw runtime smoke test 脚本。来源：Roadmap L435。
-- [ ] R09. 增加 Mac Mini OpenClaw pull 后的人工验收 checklist。来源：Roadmap L290。
+  - Worker A 2026-05-27：runtime smoke 脚本未实现；本轮只冻结执行边界，true OCR/C8 runtime smoke 递延到用户集中测试。
+- [x] R09. 增加 Mac Mini OpenClaw pull 后的人工验收 checklist。来源：Roadmap L290。
+  - Worker A 2026-05-27：已新增 `docs/mac-mini-pull-acceptance-checklist.md`，限定 pull 验收为 fast-forward 与仓库 validator，不改 cron、不写 personal data、不触发 Telegram。
 - [ ] R10. 明确模型选择只影响 OCR/Vision 质量，不改变仓库路径合同。来源：Roadmap L188。
 - [ ] R11. 重新核验模型推荐区，尤其多模态能力；当前 runtime 模型为 `openai/gpt-5.4`。来源：Roadmap L237。
 - [ ] R12. 公开发布前重新核验当前模型推荐。来源：Roadmap L142。
 - [ ] R13. 重新验证跨维度洞察 runtime，包括真实截图/OCR runtime smoke、C8 runtime smoke 和长期趋势。来源：Roadmap L61。
+  - Worker A 2026-05-27：本轮新增 `scripts/validate_report_contracts.py` 仅验证 static report contract；runtime 与长期趋势仍递延到用户集中测试。
 - [ ] R14. 执行“C8 runtime smoke”这个当前最佳下一步。来源：Roadmap L453。
+  - Worker A 2026-05-27：C8 runtime smoke 未执行；边界与准入条件见 `docs/runtime-smoke-boundary.md`。
 - [ ] R15. 完成真实 runtime C8 验证。来源：Roadmap L377。
+  - Worker A 2026-05-27：未完成真实 runtime C8；当前只保持 synthetic/static proof。
 - [ ] R16. 用 C8 runtime smoke 验证报告模板达到 runtime-proven。来源：Roadmap L179。
+  - Worker A 2026-05-27：报告模板由 `scripts/validate_report_contracts.py` 做 static contract gate，runtime-proven 仍待用户集中测试。
 - [ ] R17. 验证真实 runtime 中有足够数据时，周报/月报包含有用跨维度分析。来源：Roadmap L383。
 - [ ] R18. 验证真实 runtime 中覆盖率太低时，Agent 不做趋势断言。来源：Roadmap L384。
 - [ ] R19. 补更多个人基线数据以提升建议质量。来源：Roadmap L186。
+  - Worker A 2026-05-27：个人基线数据补充递延到用户集中测试；本轮不写 runtime personal data。
 - [ ] R20. 补更多自建食物库数据以提升饮食精度。来源：Roadmap L187。
+  - Worker A 2026-05-27：自建食物库补充递延到用户集中测试；本轮不写 `workspace/food-library/`。
 
 ## B. 深度分析与报告接入
 
