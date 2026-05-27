@@ -78,6 +78,9 @@ git check-ignore -v \
 
 ```bash
 python3 scripts/validate_repository_contract.py
+python3 scripts/validate_settlement_prompt_contract.py
+python3 scripts/validate_daily_json_schema.py
+python3 scripts/validate_report_contracts.py
 ```
 
 如发布页新增外部链接，人工打开关键外链；当前 validator 只检查本地 Markdown 链接。

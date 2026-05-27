@@ -24,7 +24,8 @@
   - 2026-05-27：已新增 `fixtures/synthetic/phase3b-deep-analysis/`，并纳入 daily JSON schema validator。
 - [x] R05. 增加测试样例，让结算/报告 prompt 可安全迭代。来源：Roadmap L182。
   - 2026-05-27：已新增 M1/E1/S1 synthetic 示例与 report contract validator；结算 prompt 的真实 runtime 回归仍未执行。
-- [ ] R06. 增加结算 JSON 的 prompt 回归测试。来源：Roadmap L438。
+- [x] R06. 增加结算 JSON 的 prompt 回归测试。来源：Roadmap L438。
+  - 2026-05-27：已新增 `fixtures/synthetic/settlement-prompt/` 与 `scripts/validate_settlement_prompt_contract.py`，覆盖 synthetic 每日日志到 expected daily JSON 的 repo 层 prompt 回归合同；真实 OpenClaw 零点结算 runtime 不在本轮运行。
 - [x] R07. 增加 JSON schema validation。来源：Roadmap L439。
   - Worker A 2026-05-27：已新增 `scripts/validate_daily_json_schema.py`，覆盖 non-private synthetic daily JSON fixture 的日期、可选对象/null 字段、关键数值字段与 synthetic/no-real-person 合同。
 - [ ] R08. 增加 Mac Mini OpenClaw runtime smoke test 脚本。来源：Roadmap L435。

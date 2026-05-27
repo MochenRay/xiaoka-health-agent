@@ -179,7 +179,7 @@ flowchart TD
 - [ ] runtime-proven 报告模板仍待 C8 runtime smoke 验证。
 - [x] Phase 2C 第一版不依赖 parser；设计目标是截图记录先追加到每日 Markdown，再由现有零点结算进入每日 JSON。
 - [x] 必须先有足够的运动/睡眠结构化 JSON，才能稳定纳入趋势自动化：已用 non-private synthetic fixtures 覆盖。
-- [x] 必须先有测试样例，才能安全迭代结算/报告 prompt：已补 M1/E1/S1 synthetic 示例、daily JSON schema validator 与 report contract validator。
+- [x] 必须先有测试样例，才能安全迭代结算/报告 prompt：已补 settlement prompt synthetic regression、M1/E1/S1 synthetic 示例、daily JSON schema validator 与 report contract validator。
 
 软依赖：
 
@@ -435,7 +435,7 @@ flowchart TD
 - [ ] Mac Mini OpenClaw runtime smoke test 脚本。
 - [x] 每日/周报/月报 synthetic fixtures。
 - [x] C8 sufficient / insufficient synthetic fixtures 与 validator。
-- [ ] 结算 JSON 的 prompt 回归测试。
+- [x] 结算 JSON 的 prompt 回归测试。
 - [x] JSON schema validation。
 - [ ] 可选：从 `workspace/data/` 生成静态 dashboard。
 

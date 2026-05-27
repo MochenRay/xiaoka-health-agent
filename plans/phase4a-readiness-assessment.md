@@ -47,6 +47,7 @@
 ## 发布前硬门槛
 
 - `python3 scripts/validate_repository_contract.py`
+- `python3 scripts/validate_settlement_prompt_contract.py`
 - `python3 scripts/validate_daily_json_schema.py`
 - `python3 scripts/validate_report_contracts.py`
 - `python3 scripts/validate_phase2b_fixtures.py`

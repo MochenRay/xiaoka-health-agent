@@ -1,0 +1,87 @@
+{
+  "date": "2026-07-02",
+  "weight": {
+    "value": 101.2,
+    "unit": "kg",
+    "source": "manual"
+  },
+  "nutrition": {
+    "total_calories": 866,
+    "protein_g": 61.6,
+    "carbs_g": 87.2,
+    "fat_g": 30.1,
+    "meals": [
+      {
+        "time": "08:30",
+        "type": "breakfast",
+        "items": [
+          {
+            "name": "鸡蛋",
+            "amount": "2个",
+            "calories": 156,
+            "protein": 12.6,
+            "carbs": 1.2,
+            "fat": 10.6
+          },
+          {
+            "name": "全麦吐司",
+            "amount": "1片",
+            "calories": 90,
+            "protein": 4,
+            "carbs": 16,
+            "fat": 1.5
+          }
+        ],
+        "calories": 246
+      },
+      {
+        "time": "12:40",
+        "type": "lunch",
+        "items": [
+          {
+            "name": "鸡胸肉饭",
+            "amount": "1份",
+            "calories": 620,
+            "protein": 45,
+            "carbs": 70,
+            "fat": 18
+          }
+        ],
+        "calories": 620
+      }
+    ]
+  },
+  "exercise": {
+    "total_burn": 260,
+    "activities": [
+      {
+        "type": "strength",
+        "duration_min": 45,
+        "calories": 260,
+        "active_energy_kcal": 260,
+        "source": "manual",
+        "confidence": "high",
+        "note": "SYNTHETIC_SETTLEMENT fabricated strength session"
+      }
+    ]
+  },
+  "activity_summary": null,
+  "steps": null,
+  "sleep": {
+    "duration_h": 7,
+    "source": "manual",
+    "start_time": "23:45",
+    "end_time": "06:45",
+    "time_in_bed_h": null,
+    "efficiency_pct": null,
+    "stages": null,
+    "quality": "fair",
+    "confidence": "high",
+    "note": "SYNTHETIC_SETTLEMENT fabricated sleep entry"
+  },
+  "supplements": [
+    "creatine_5g",
+    "vitamin_d_2000iu"
+  ],
+  "notes": "SYNTHETIC_SETTLEMENT fixture only; fabricated settlement prompt sample, not real health data."
+}

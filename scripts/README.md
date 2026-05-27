@@ -24,6 +24,9 @@
   `docs/c8-cross-dimensional-insights.md`、`docs/deep-analysis-report-contract.md`、
   周/月报模板和 Phase 3B expected report sections 中的标准 runtime 路径、
   `NO_REPLY`、C8 / M1 / E1 / S1 section 结构，以及旧根目录 runtime 路径是否只出现在禁止/兼容语境。
+- `validate_settlement_prompt_contract.py`：校验 synthetic 每日日志到 expected
+  daily JSON 的结算 prompt 回归合同；只验证 repo 层 prompt/spec 与 fixture，
+  不运行 OpenClaw cron。
 - `validate_repository_contract.py`：校验仓库级轻量合同，包括 Markdown 本地链接、
   tracked JSON 合法性、`references/*.md` metadata、`SKILL.md` 行数，以及旧根目录
   runtime 路径只出现在兼容/禁止语境中。
