@@ -12,7 +12,7 @@
   必须要求多模态/image-recognition/OCR 能力。
 - D/E/F 外部集成与体验扩展暂停，Phase 4A 不实现 Apple Health XML parser、
   Health Auto Export、Withings/体脂秤、Telegram 快捷操作或静态 dashboard。
-- 真实截图/OCR runtime smoke、C8 runtime smoke 和 M1/E1/S1 自动报告接入仍是后续项；
+- 真实截图/OCR runtime smoke、C8 runtime smoke 和 M1/E1/S1 OpenClaw runtime 自动报告验证仍是后续项；
   公开文案不得写成 runtime-proven。
 
 ## 启动前必须先收口
@@ -39,7 +39,7 @@
 - Withings/体脂秤导入。
 - Telegram 快捷操作。
 - 静态 dashboard。
-- M1/E1/S1 全量接入周报/月报。
+- M1/E1/S1 全量 runtime 自动报告验证。
 
 这些是产品扩展，不是公开发布打磨的启动门槛；D/E/F 本轮已暂停或延后，README
 不得把它们写成已完成。
@@ -47,6 +47,8 @@
 ## 发布前硬门槛
 
 - `python3 scripts/validate_repository_contract.py`
+- `python3 scripts/validate_daily_json_schema.py`
+- `python3 scripts/validate_report_contracts.py`
 - `python3 scripts/validate_phase2b_fixtures.py`
 - `python3 scripts/validate_phase2c_screenshot_fixtures.py`
 - `python3 scripts/validate_phase3a_c8_fixtures.py`

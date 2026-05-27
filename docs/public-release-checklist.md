@@ -113,7 +113,8 @@ git diff --cached --check
 - 真实截图/OCR runtime smoke 通过后，才可声称真实 Apple Watch / Apple Health
   截图识别闭环。
 - C8 OpenClaw runtime smoke 通过后，才可声称 C8 周报/月报 runtime-proven。
-- M1/E1/S1 接入周报/月报并验证后，才可声称深度药物、运动、睡眠分析已进入自动报告。
+- M1/E1/S1 repo 层合同和模板只能声称为 static fixture validation；OpenClaw
+  runtime 自动报告验证通过后，才可声称深度药物、运动、睡眠分析已进入自动报告。
 
 ## 8. Final pre-release review
 

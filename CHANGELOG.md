@@ -24,6 +24,9 @@ smoke 的项目。公开 README、发布页和对外介绍应以本文件与发�
 - Phase 3A C8 已有一等 workflow、报告 section contract 和 sufficient /
   insufficient synthetic validator；这仍是 static fixture validation，不是
   OpenClaw runtime smoke。
+- Phase 3B M1/E1/S1 已有 repo 层结构化摘要合同、周/月报模板入口、synthetic
+  daily JSON fixture 和 expected report sections；这仍是 static fixture validation，
+  不是 OpenClaw runtime 自动报告验证。
 - 仓库公开边界已补齐：发布 checklist、隐私与云端模型边界、医学非诊断边界和
   screenshot/OCR 限制。
 
@@ -41,8 +44,8 @@ smoke 的项目。公开 README、发布页和对外介绍应以本文件与发�
 - 真实 Apple Watch / Apple Health 截图 OCR runtime smoke 仍未完成。
 - 更完整的截图回归 fixtures 仍未完成。
 - C8 OpenClaw runtime smoke 仍未完成。
-- M1/E1/S1 深度分析接入周报/月报仍未完成。
+- M1/E1/S1 OpenClaw runtime 自动报告验证仍未完成；不得写成 runtime-proven。
 - Apple Health XML parser、Health Auto Export、Withings/体脂秤导入、Telegram
   快捷操作和静态 dashboard 已延后；不得写成 Phase 4A 发布能力。
 - 公开发布或打 tag 前仍需重新运行 secret scan、Markdown 链接/仓库合同校验、
-  fixture validators 和 whitespace 检查。
+  daily JSON / report contract validators、fixture validators 和 whitespace 检查。

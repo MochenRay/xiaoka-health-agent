@@ -12,7 +12,7 @@
 
 - `validate_daily_json_schema.py`：校验 `fixtures/synthetic/**/workspace/data/`
   下的非私人 daily JSON fixture；覆盖日期格式、顶层可选对象/null 字段、
-  关键数值字段、synthetic 标记和常见真实个人标识防护。
+  关键数值字段、M1/E1/S1 `analysis_summaries` 合同、synthetic 标记和常见真实个人标识防护。
 - `validate_phase2b_fixtures.py`：校验 Phase 2B synthetic 周报/月报 fixtures。
 - `validate_phase2c_screenshot_fixtures.py`：校验 Phase 2C screenshot-first
   synthetic fixtures，覆盖已确认截图识别结果到 Markdown 日志和 expected
@@ -21,9 +21,9 @@
   shape、expected report 的 `## 跨维度观察` section wording，以及 selected
   source-backed metrics。
 - `validate_report_contracts.py`：校验 `docs/report-automation.md`、
-  `docs/c8-cross-dimensional-insights.md` 和周/月报模板中的标准 runtime 路径、
-  `NO_REPLY`、C8 section 结构，以及旧根目录 runtime 路径是否只出现在
-  禁止/兼容语境。
+  `docs/c8-cross-dimensional-insights.md`、`docs/deep-analysis-report-contract.md`、
+  周/月报模板和 Phase 3B expected report sections 中的标准 runtime 路径、
+  `NO_REPLY`、C8 / M1 / E1 / S1 section 结构，以及旧根目录 runtime 路径是否只出现在禁止/兼容语境。
 - `validate_repository_contract.py`：校验仓库级轻量合同，包括 Markdown 本地链接、
   tracked JSON 合法性、`references/*.md` metadata、`SKILL.md` 行数，以及旧根目录
   runtime 路径只出现在兼容/禁止语境中。

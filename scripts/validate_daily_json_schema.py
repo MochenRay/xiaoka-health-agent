@@ -26,7 +26,33 @@ OPTIONAL_OBJECT_FIELDS = (
     "activity_summary",
     "steps",
     "sleep",
+    "analysis_summaries",
 )
+ANALYSIS_SUMMARY_WORKFLOWS = {
+    "m1_medication": "M1",
+    "e1_exercise": "E1",
+    "s1_sleep": "S1",
+}
+ANALYSIS_SUMMARY_VERSION = "phase3b-static-v1"
+ANALYSIS_SUMMARY_STATUSES = (
+    "not_run",
+    "insufficient_data",
+    "background_only",
+    "ready",
+    "needs_review",
+)
+M1_MEDICATION_STATUSES = (
+    "none_recorded",
+    "considering",
+    "active",
+    "paused",
+    "discontinued",
+    "unknown",
+)
+M1_SUPPLEMENT_STATUSES = ("none_recorded", "recorded", "changed", "unknown")
+E1_PROGRESSION_SIGNALS = ("improving", "stable", "decreasing", "insufficient_data")
+S1_REGULARITY_SIGNALS = ("improving", "stable", "irregular", "mixed", "insufficient_data")
+S1_RECOVERY_SIGNALS = ("improving", "stable", "decreasing", "mixed", "insufficient_data")
 REAL_PERSON_MARKERS = (
     "真实姓名",
     "身份证",
@@ -78,6 +104,35 @@ def require_number(path: Path, value: Any, label: str) -> None:
         return
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         raise ValueError(f"{relative(path)}: {label} must be a number when present")
+
+
+def require_bool(path: Path, value: Any, label: str) -> None:
+    if value is None:
+        return
+    if not isinstance(value, bool):
+        raise ValueError(f"{relative(path)}: {label} must be a boolean when present")
+
+
+def require_string(path: Path, value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{relative(path)}: {label} must be a non-empty string")
+    return value
+
+
+def require_string_list(path: Path, value: Any, label: str) -> list[str]:
+    if not isinstance(value, list):
+        raise ValueError(f"{relative(path)}: {label} must be a list")
+    for index, item in enumerate(value):
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"{relative(path)}: {label}[{index}] must be a non-empty string")
+    return value
+
+
+def require_allowed(path: Path, value: Any, label: str, allowed: tuple[str, ...]) -> str:
+    actual = require_string(path, value, label)
+    if actual not in allowed:
+        raise ValueError(f"{relative(path)}: {label} must be one of {', '.join(allowed)}")
+    return actual
 
 
 def validate_optional_object(path: Path, data: dict[str, Any], key: str) -> dict[str, Any] | None:
@@ -213,6 +268,141 @@ def validate_supplements(path: Path, data: dict[str, Any]) -> None:
         raise ValueError(f"{relative(path)}: supplements must be a list or null")
 
 
+def validate_summary_period(path: Path, summary: dict[str, Any], label: str) -> None:
+    period = summary.get("period")
+    if not isinstance(period, dict):
+        raise ValueError(f"{relative(path)}: {label}.period must be an object")
+    for key in ("start", "end"):
+        actual = period.get(key)
+        if not isinstance(actual, str) or not DATE_RE.fullmatch(actual):
+            raise ValueError(f"{relative(path)}: {label}.period.{key} must be YYYY-MM-DD")
+        try:
+            date.fromisoformat(actual)
+        except ValueError as exc:
+            raise ValueError(f"{relative(path)}: invalid {label}.period.{key} {actual!r}") from exc
+
+
+def validate_m1_trend_inputs(path: Path, trend_inputs: dict[str, Any], label: str) -> None:
+    require_allowed(
+        path,
+        trend_inputs.get("medication_status"),
+        f"{label}.trend_inputs.medication_status",
+        M1_MEDICATION_STATUSES,
+    )
+    require_allowed(
+        path,
+        trend_inputs.get("supplement_status"),
+        f"{label}.trend_inputs.supplement_status",
+        M1_SUPPLEMENT_STATUSES,
+    )
+    for key in ("adherence_recorded", "monitoring_needed", "clinician_review_needed"):
+        require_bool(path, trend_inputs.get(key), f"{label}.trend_inputs.{key}")
+    require_string_list(
+        path,
+        trend_inputs.get("interaction_flags", []),
+        f"{label}.trend_inputs.interaction_flags",
+    )
+
+
+def validate_e1_trend_inputs(path: Path, trend_inputs: dict[str, Any], label: str) -> None:
+    for key in ("sessions", "total_duration_min", "total_active_energy_kcal"):
+        require_number(path, trend_inputs.get(key), f"{label}.trend_inputs.{key}")
+    require_string_list(path, trend_inputs.get("dominant_types", []), f"{label}.trend_inputs.dominant_types")
+    require_string_list(path, trend_inputs.get("equipment_used", []), f"{label}.trend_inputs.equipment_used")
+    require_bool(
+        path,
+        trend_inputs.get("injury_constraints_respected"),
+        f"{label}.trend_inputs.injury_constraints_respected",
+    )
+    signal = require_allowed(
+        path,
+        trend_inputs.get("progression_signal"),
+        f"{label}.trend_inputs.progression_signal",
+        E1_PROGRESSION_SIGNALS,
+    )
+    sessions = trend_inputs.get("sessions")
+    if isinstance(sessions, (int, float)) and sessions < 3 and signal != "insufficient_data":
+        raise ValueError(
+            f"{relative(path)}: {label}.trend_inputs.progression_signal must be "
+            "insufficient_data when sessions < 3"
+        )
+
+
+def validate_s1_trend_inputs(path: Path, trend_inputs: dict[str, Any], label: str) -> None:
+    for key in (
+        "sleep_days",
+        "avg_duration_h",
+        "target_duration_h",
+        "avg_efficiency_pct",
+        "late_sleep_days",
+    ):
+        require_number(path, trend_inputs.get(key), f"{label}.trend_inputs.{key}")
+    regularity = require_allowed(
+        path,
+        trend_inputs.get("regularity_signal"),
+        f"{label}.trend_inputs.regularity_signal",
+        S1_REGULARITY_SIGNALS,
+    )
+    require_allowed(
+        path,
+        trend_inputs.get("recovery_signal"),
+        f"{label}.trend_inputs.recovery_signal",
+        S1_RECOVERY_SIGNALS,
+    )
+    sleep_days = trend_inputs.get("sleep_days")
+    if isinstance(sleep_days, (int, float)) and sleep_days < 3 and regularity != "insufficient_data":
+        raise ValueError(
+            f"{relative(path)}: {label}.trend_inputs.regularity_signal must be "
+            "insufficient_data when sleep_days < 3"
+        )
+
+
+def validate_analysis_summary(path: Path, summary: Any, key: str, workflow: str) -> None:
+    label = f"analysis_summaries.{key}"
+    if not isinstance(summary, dict):
+        raise ValueError(f"{relative(path)}: {label} must be an object")
+    actual_workflow = require_string(path, summary.get("workflow"), f"{label}.workflow")
+    if actual_workflow != workflow:
+        raise ValueError(f"{relative(path)}: {label}.workflow must be {workflow}, got {actual_workflow!r}")
+    version = require_string(path, summary.get("version"), f"{label}.version")
+    if version != ANALYSIS_SUMMARY_VERSION:
+        raise ValueError(
+            f"{relative(path)}: {label}.version must be {ANALYSIS_SUMMARY_VERSION}, got {version!r}"
+        )
+    require_allowed(path, summary.get("status"), f"{label}.status", ANALYSIS_SUMMARY_STATUSES)
+    validate_summary_period(path, summary, label)
+    require_string_list(path, summary.get("source_scope"), f"{label}.source_scope")
+    require_string(path, summary.get("summary"), f"{label}.summary")
+    trend_inputs = summary.get("trend_inputs")
+    if not isinstance(trend_inputs, dict):
+        raise ValueError(f"{relative(path)}: {label}.trend_inputs must be an object")
+    require_string_list(path, summary.get("flags", []), f"{label}.flags")
+    if "report_carry_forward" not in summary:
+        raise ValueError(f"{relative(path)}: {label}.report_carry_forward is required")
+    require_bool(path, summary.get("report_carry_forward"), f"{label}.report_carry_forward")
+
+    if workflow == "M1":
+        validate_m1_trend_inputs(path, trend_inputs, label)
+    elif workflow == "E1":
+        validate_e1_trend_inputs(path, trend_inputs, label)
+    elif workflow == "S1":
+        validate_s1_trend_inputs(path, trend_inputs, label)
+
+
+def validate_analysis_summaries(path: Path, data: dict[str, Any]) -> None:
+    summaries = validate_optional_object(path, data, "analysis_summaries")
+    if summaries is None:
+        return
+    if "phase3b-deep-analysis" in relative(path):
+        missing = [key for key in ANALYSIS_SUMMARY_WORKFLOWS if key not in summaries]
+        if missing:
+            raise ValueError(f"{relative(path)}: missing required Phase 3B summaries: {', '.join(missing)}")
+    for key, summary in summaries.items():
+        if key not in ANALYSIS_SUMMARY_WORKFLOWS:
+            raise ValueError(f"{relative(path)}: unsupported analysis_summaries key {key!r}")
+        validate_analysis_summary(path, summary, key, ANALYSIS_SUMMARY_WORKFLOWS[key])
+
+
 def validate_file(path: Path) -> None:
     data = load_json(path)
     validate_date(path, data)
@@ -225,6 +415,7 @@ def validate_file(path: Path) -> None:
     validate_steps(path, data)
     validate_sleep(path, data)
     validate_supplements(path, data)
+    validate_analysis_summaries(path, data)
     validate_synthetic_marker(path, data)
     validate_no_real_person_markers(path, data)
 

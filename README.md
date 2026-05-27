@@ -9,6 +9,7 @@
 - 周报/月报已通过零覆盖场景验证：无数据时分别生成 `0/7`、`0/30` 覆盖率报告，并输出 `NO_REPLY`，不会打扰 Telegram。
 - Phase 2C 最小闭环采用截图优先：已定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同，并用 synthetic fixture 验证“已确认截图识别结果 → Markdown 日志 → expected 标准 JSON”的本地映射；暂不做历史批量导入或 parser。
 - Phase 3A / C8 已定义一等跨维度 workflow 与报告 section contract，并用 synthetic fixture / validator 验证 sufficient 与 insufficient 两个分支；这是静态合同与 fixture 验证，不是 OpenClaw runtime 重新验证。
+- Phase 3B / M1/E1/S1 已定义 repo 层结构化摘要合同、周/月报模板入口和 synthetic expected report sections；OpenClaw runtime 自动报告生成仍待集中测试验证。
 
 ## 它能做什么
 
