@@ -167,22 +167,32 @@ Phase 2C fixture 只验证已确认截图识别结果的记录合同，不验证
 
 Phase 3A C8 fixture 只验证 synthetic fixture shape、报告 `## 跨维度观察` section wording，以及选定 source-backed metrics；不验证 OpenClaw runtime、真实报告生成器或个人健康数据。
 
-## 模型选择
+## 发布与边界
+
+- 公开发布前按 [Public Release Checklist](docs/public-release-checklist.md) 逐项核对。
+- 隐私、云端模型和医学边界见 [Privacy and Medical Boundaries](docs/privacy-and-medical-boundaries.md)。
+- 公开文案必须区分已完成能力、static fixture validation、runtime verified 和 pending runtime smoke。
+
+## 模型策略
+
+小卡支持多模型部署；模型是运行时绑定，不改变本仓库的 `config/` 与 `workspace/` 路径合同。公开文档只声明能力要求，不把任何单一模型写成固定推荐。
 
 最低要求：
 
 - 支持中文健康记录与较强的指令遵循
-- 如需处理照片、截图、营养标签或体检单，必须支持图片输入
-- Apple Watch / Apple Health 截图记录依赖可靠的 Vision/OCR；如果运行模型不能稳定读图，用户需要手动转写日期、来源、类型、时长、active calories 或睡眠时长等关键字段
+- 文字记录、报告整理和 fixture validators 可由文本模型完成
+- 如需处理照片、截图、营养标签或体检单，必须支持图片输入、图片识别或 OCR
+- Apple Watch / Apple Health 截图记录依赖可靠的多模态/image-recognition 能力；如果运行模型不能稳定读图，用户需要手动转写日期、来源、类型、时长、active calories 或睡眠时长等关键字段
 - 能稳定遵守本仓库的文件读写路径合同
 
 具体模型以部署环境可用项为准；OpenClaw 中可用 `openclaw agents list --bindings` 查看当前 `xiaoka` 配置。
 
 ## 隐私
 
-- 所有健康数据默认存储在本地 `config/` 和 `workspace/` 目录，不上传任何服务器
-- 使用云端模型 API 时，对话内容会发送给模型提供商（如阿里云、Moonshot 等）
-- 如需完全离线使用，请部署本地模型
+- 所有健康数据默认存储在本地 `config/` 和 `workspace/` 目录；仓库不会主动提供远端数据库或自有服务器同步
+- 使用云端模型 API 时，对话内容、截图、图片、OCR 结果和必要健康上下文可能会发送给模型提供商
+- 如需完全离线使用，请部署本地模型；若要处理截图或照片，本地模型也必须具备图片识别/OCR 能力
+- 小卡不提供医疗诊断、处方或药物剂量调整；医学边界见 [Privacy and Medical Boundaries](docs/privacy-and-medical-boundaries.md)
 
 ## 贡献
 

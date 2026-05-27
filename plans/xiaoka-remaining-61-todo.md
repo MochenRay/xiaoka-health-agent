@@ -65,6 +65,10 @@
 
 ## C. Phase 4A 发布打磨
 
+> C 组状态注记（2026-05-27）：本轮只做不需要用户测试的 release hardening，
+> 包括 CHANGELOG、公开发布 checklist、隐私/医学边界和 README 发布/模型/隐私口径。
+> 复选框保留原 Roadmap 映射，主线吸收时再统一决定是否关闭。
+
 - [ ] R36. 增加 `CHANGELOG.md`。来源：Roadmap L138。
 - [ ] R37. 增加 `CHANGELOG.md`。来源：Roadmap L235。
 - [ ] R38. 增加 `CHANGELOG.md`。来源：Roadmap L390。
@@ -82,6 +86,9 @@
 
 ## D. 数据与集成扩展
 
+> 状态注记（2026-05-27）：D 组外部数据/集成扩展已暂停并延后；不得纳入本轮
+> Phase 4A 公开发布能力声明。
+
 - [ ] R50. 增加 Apple Health 原生 XML parser，用于未来历史批量导入。来源：Roadmap L408。
 - [ ] R51. 增加 Health Auto Export 集成，用于未来定期导入 Apple Health CSV/JSON。来源：Roadmap L409。
 - [ ] R52. 增加 Withings/体脂秤导入体重与身体成分。来源：Roadmap L410。
@@ -91,6 +98,9 @@
 
 ## E. 使用体验
 
+> 状态注记（2026-05-27）：E 组 UX 扩展已暂停并延后；不得纳入本轮 Phase 4A
+> 公开发布能力声明。
+
 - [ ] R56. 增加 Telegram 快捷操作：常吃餐、体重、睡眠、运动。来源：Roadmap L427。
 - [ ] R57. 增加“这周和上周比有什么变化？”命令。来源：Roadmap L428。
 - [ ] R58. 增加“生成就诊摘要”命令。来源：Roadmap L429。
@@ -98,5 +108,8 @@
 - [ ] R60. 增加 OCR 或热量估算错误时的友好纠正流程。来源：Roadmap L431。
 
 ## F. 可选工程化输出
+
+> 状态注记（2026-05-27）：F 组可选 dashboard 输出已暂停并延后；不得纳入本轮
+> Phase 4A 公开发布能力声明。
 
 - [ ] R61. 可选：从 `workspace/data/` 生成静态 dashboard。来源：Roadmap L440。
