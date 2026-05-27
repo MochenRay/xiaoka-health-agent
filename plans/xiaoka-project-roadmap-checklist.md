@@ -1,9 +1,9 @@
 # 小卡健康 Agent 项目路线图清单
 
-> 审计时间：2026-05-24 CST
-> 仓库文档更新基线：当前编辑分支 `codex/xiaoka-c8-cross-dimensional` 基于 `main` / `origin/main` `b455977`；本文件当前 C8 改动尚待提交、合并、同步 Mac Mini runtime
-> 运行态验证基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `8f24546`
-> 远端运行态抽查基线：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `8f24546`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
+> 最近复核：2026-05-27 CST
+> 仓库文档更新基线：`/Users/rayli/xiaoka-health-agent`，分支 `main`，HEAD `f41ca0b`；本轮 Phase 1 漂移与 smoke/readiness 文档修补尚待提交
+> 运行态验证基线：本地 `main`、`origin/main`、Mac Mini workspace 均为 `f41ca0b`
+> 远端运行态抽查基线：`mac-mini:~/.openclaw/workspace-xiaoka` 同步到 `f41ca0b`；OpenClaw 中五条小卡 `cron` 任务均已启用，最近运行状态均为 `ok`
 > 本文件是仓库侧计划真相层。OpenClaw 运行态真相层仍是 Mac Mini 上的 `~/.openclaw/cron/jobs.json`。
 
 ## 文档语言约定
@@ -16,12 +16,15 @@
 
 - 当前仓库文件：
   - `README.md`
+  - `docs/PRD.md`
   - `SKILL.md`
   - `docs/phase1-minimum-contract.md`
   - `docs/data-schema.md`
   - `docs/knowledge-base-sources.md`
   - `docs/openclaw-runtime.md`
   - `docs/report-automation.md`
+  - `plans/phase3a-c8-runtime-smoke.md`
+  - `plans/phase4a-readiness-assessment.md`
   - `docs/superpowers/plans/2026-05-13-xiaoka-phase2b-runtime.md`
   - `deploy/openclaw-setup.md`
   - `scripts/README.md`
@@ -34,7 +37,8 @@
   - OpenClaw 中小卡 `周报` 与 `月报` cron 任务已创建、启用，并完成零覆盖场景手动验证；2026-05-24 复核时五条 cron 最近状态均为 `ok`。
   - 2026-05-24 本地与 Mac Mini workspace 已同步到 `8f24546`；初次同步时 Mac Mini 直连 GitHub 失败，先通过 `git bundle` 经 SSH 同步。
   - 2026-05-24 Phase 2B synthetic runtime 非零验证已通过：周报覆盖率 `3/7`、月报覆盖率 `3/30`，两者 run status 均为 `ok` 且 summary 非 `NO_REPLY`；generated 报告已归档到 `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-195710/generated`，synthetic JSON 已清理、原零覆盖报告已恢复。
-  - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；共享层旧模型口径已需要刷新。
+  - 2026-05-27 只读复核：本地 `main`、`origin/main`、Mac Mini workspace 均为 `f41ca0b`；五条 `xiaoka` cron 均 enabled，最近运行状态均为 `ok`；本次未运行 cron、未写 runtime、未触发 Telegram announce。
+  - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；公开模型推荐仍需在 Phase 4A 中重写为能力要求，而不是固定推荐某个旧模型。
 
 ## 真相层边界
 
@@ -75,10 +79,10 @@
 - [x] 部署指南骨架。
 - [x] OpenClaw 兼容文件：`SOUL.md`、`IDENTITY.md`。
 - [x] 阶段 1 路径合同：`docs/phase1-minimum-contract.md`。
-- [ ] `docs/PRD.md`：旧阶段 1 计划要求加入；当前仓库改用 `docs/phase1-minimum-contract.md`，旧 PRD 仍在 `/Users/rayli/health-coach/docs/`。
-- [ ] `.env.example` 已存在，但 `README.md` 目录树未列出；属于轻微文档漂移。
+- [x] `docs/PRD.md`：已补当前仓库 PRD 索引；旧 PRD 只作为来源，不再作为当前 canonical。
+- [x] `.env.example` 已加入 `README.md` 目录树。
 
-状态：**功能上已完成，但有文档漂移**。
+状态：**功能与 Phase 1 文档漂移均已收口**。
 
 ### 原阶段 2：自动化与报告
 
@@ -132,7 +136,7 @@
 - [x] `docs/knowledge-base-sources.md`。
 - [x] `docs/data-schema.md`。
 - [ ] `CHANGELOG.md`。
-- [ ] 在仓库中放入完整 PRD，或放入明确的 canonical PRD 指针。
+- [x] 在仓库中放入完整 PRD，或放入明确的 canonical PRD 指针：见 `docs/PRD.md`。
 - [x] 运行态操作手册：区分 repo sync 与 OpenClaw runtime sync。
 - [x] README 当前能力介绍已合并 Phase 2B runtime 进展。
 - [ ] 当前模型推荐看起来可能过时；公开发布前需重新核验。
@@ -227,7 +231,7 @@ flowchart TD
 ### 仓库文档漂移
 
 - [x] 修正 `README.md` 与 `docs/knowledge-base-sources.md` 中食物库数量：旧 `1677`，当前核实 `1657`。
-- [ ] 决定是否把旧 PRD 导入仓库为 `docs/PRD.md`，或只保留 canonical 指针。
+- [x] 决定是否把旧 PRD 导入仓库为 `docs/PRD.md`，或只保留 canonical 指针：已补 `docs/PRD.md` 作为当前仓库 PRD 索引。
 - [ ] 增加 `CHANGELOG.md`。
 - [x] 若 `plans/` 成为长期计划层，则把它加入 `README.md` 目录树。
 - [ ] 重新核验模型推荐区，尤其多模态能力；当前 runtime 模型已核为 `openai/gpt-5.4`。
@@ -368,6 +372,7 @@ flowchart TD
 - [x] 增加 C8 synthetic fixture / 示例：
   - sufficient：饮食、运动/活动、睡眠有足够配对日时，只输出低断言强度观察。
   - insufficient：数据不足时只输出固定不足句。
+- [x] 写明 Phase 3A C8 runtime smoke 计划：见 `plans/phase3a-c8-runtime-smoke.md`。
 - [ ] 将药物、体检维度在有明确来源时接入月报观察。
 - [ ] 完成真实 runtime C8 验证。
 
@@ -383,7 +388,7 @@ flowchart TD
 目的：让仓库可被未来复用，并避免能力声明超过实际实现。
 
 - [ ] 增加 `CHANGELOG.md`。
-- [ ] 修复当前文档漂移。
+- [x] 修复 Phase 1 与当前基线文档漂移。
 - [ ] 增加发布 checklist。
 - [ ] 若公开发布，运行 secret scan。
 - [ ] 运行 Markdown 链接检查。
@@ -441,8 +446,11 @@ flowchart TD
 - [x] **修复 Mac Mini 网络/代理后重跑 Phase 2B 非零样例数据 runtime 验证**。
 - [x] **补 Phase 2C 已确认截图识别结果 mapping fixture 验证**。
 - [x] **阶段 3A 静态合同与 synthetic validator**：已定义 C8 workflow、报告章节模板、数据不足行为和 sufficient/insufficient fixture 验证。
+- [x] **修 Phase 1 文档漂移**：补 `docs/PRD.md`，把 `.env.example` 加入 README 目录树，并刷新当前基线。
+- [x] **写明 Phase 3A C8 runtime smoke 计划**：见 `plans/phase3a-c8-runtime-smoke.md`。
+- [x] **评估 Phase 4A 启动前置**：见 `plans/phase4a-readiness-assessment.md`。
 - [ ] **下一步 1：真实截图/OCR runtime smoke**。
 - [ ] **下一步 2：C8 runtime smoke**。
 - [ ] **下一步 3：Phase 4A 发布打磨**。
 
-原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步到既有 runtime 基线，runtime 零覆盖与 synthetic 非零场景均已验证，截图先行路径也已用 synthetic recognized fixture 验证到 expected JSON。本轮 C8 只完成静态合同与 synthetic validator，后续应做真实截图/OCR runtime smoke、C8 runtime smoke，或转入 Phase 4A 发布打磨；parser、Health Auto Export 和 XML 批量导入留作后续扩展。
+原因：周报/月报依赖稳定每日 JSON；当前仓库和 Mac Mini workspace 已同步到 `f41ca0b`，runtime 零覆盖与 synthetic 非零场景均已验证，截图先行路径也已用 synthetic recognized fixture 验证到 expected JSON。C8 目前完成静态合同与 synthetic validator，下一步应按 runbook 做真实截图/OCR runtime smoke 与 C8 runtime smoke。Phase 4A 可以作为文档/发布打磨启动，但公开文案不得把 runtime smoke 未完成的能力写成已完成；parser、Health Auto Export 和 XML 批量导入留作后续扩展。

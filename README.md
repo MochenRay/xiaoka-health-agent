@@ -107,6 +107,7 @@ printf '[]\n' > workspace/food-library/my-foods.json
 
 ```
 xiaoka-health-agent/
+├── .env.example          ← 可选环境变量示例，不含真实密钥
 ├── agent.md              ← 小卡的人格设定（通用入口）
 ├── SOUL.md               ← 同 agent.md（OpenClaw 兼容）
 ├── IDENTITY.md           ← Agent 身份标识（OpenClaw 兼容）
@@ -116,9 +117,9 @@ xiaoka-health-agent/
 ├── templates/            ← 日志和报告模板
 ├── scripts/              ← Phase 2 工具脚本与 fixture 校验
 ├── workspace/            ← 用户数据（logs/data/medical/reports/food-library）
-├── docs/                 ← 路径合同、Schema、运行态规格、知识库来源
+├── docs/                 ← PRD、路径合同、Schema、运行态规格、知识库来源
 ├── deploy/               ← 部署指南（OpenClaw / Claude Code）
-└── plans/                ← 项目路线图与阶段清单
+└── plans/                ← 项目路线图、runtime smoke 与发布准备计划
 ```
 
 ## 运行时约定

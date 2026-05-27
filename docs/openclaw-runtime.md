@@ -1,8 +1,8 @@
 # OpenClaw Runtime 规格
 
-> 最近核验：2026-05-24 CST
-> 运行态验证基线：`main` / `8f24546`
-> Mac Mini workspace 验证基线：`~/.openclaw/workspace-xiaoka` / `main` / `8f24546`
+> 最近核验：2026-05-27 CST
+> 运行态验证基线：`main` / `f41ca0b`
+> Mac Mini workspace 验证基线：`~/.openclaw/workspace-xiaoka` / `main` / `f41ca0b`
 > Runtime 真相层：Mac Mini 上的 `~/.openclaw/cron/jobs.json`
 
 本文件记录小卡在 OpenClaw 中的运行态合同。仓库 `git pull` 只同步文档和 Agent 包，不会自动修改 OpenClaw `cron` payload；凡改 `cron`，必须单独走运行态备份、编辑和验证。
@@ -58,6 +58,14 @@
 | 月报 | `51522e31-54dd-495e-8c0e-e8432bb75acd` | `30 8 1 * * @ Asia/Shanghai` | `announce -> telegram:<chat_id>` | `xiaoka` | 已启用，最近运行 `ok` |
 
 ## 最近运行态验证
+
+2026-05-27 CST 只读核验：
+
+- 本地 `main`、`origin/main`、Mac Mini workspace 均为 `f41ca0b`。
+- Mac Mini workspace tracked files clean；OpenClaw 注入的未跟踪 overlay 不作为仓库漂移。
+- `~/.openclaw/cron/jobs.json` 中五条 `xiaoka` cron 均 enabled，schedule 未改。
+- `openclaw cron list` 中五条小卡任务最近运行状态均为 `ok`。
+- 本次未运行 cron、未写入 runtime 数据、未触发 Telegram announce。
 
 2026-05-24 CST 核验：
 
