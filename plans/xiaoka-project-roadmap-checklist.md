@@ -1,6 +1,6 @@
 # 小卡健康 Agent 项目路线图清单
 
-> 最近复核：2026-05-27 CST
+> 最近复核：2026-05-28 CST
 > 本轮仓库集成基线：`codex/xiaoka-abc-autonomous` worktree 集成 A/B/C；合并后以 `main` 当前 commit 为准
 > 本轮运行态边界：不运行 OpenClaw cron、不修改 `jobs.json`、不写个人 runtime 数据、不触发 Telegram
 > 远端运行态抽查基线：OpenClaw 中五条小卡 `cron` 任务均已启用，最近只读复核状态均为 `ok`
@@ -39,6 +39,7 @@
   - 2026-05-24 Phase 2B synthetic runtime 非零验证已通过：周报覆盖率 `3/7`、月报覆盖率 `3/30`，两者 run status 均为 `ok` 且 summary 非 `NO_REPLY`；generated 报告已归档到 `/Users/ray/.openclaw/backups/xiaoka-phase2b-synthetic-20260524-195710/generated`，synthetic JSON 已清理、原零覆盖报告已恢复。
   - 2026-05-27 只读复核：本地 `main`、`origin/main`、Mac Mini workspace 均处于同一 repo 基线；五条 `xiaoka` cron 均 enabled，最近运行状态均为 `ok`；本次 A/B/C 集成不运行 cron、未写 runtime、未触发 Telegram announce。
   - Mac Mini 当前 `xiaoka` 模型为 `openai/gpt-5.4`；公开模型推荐仍需在 Phase 4A 中重写为能力要求，而不是固定推荐某个旧模型。
+  - 2026-05-28 Google Health API 人工 OAuth read smoke 已通过：`identity`、`steps`、`sleep`、`exercise` 返回 HTTP 200，且来源包含 HealthKit / Apple；token、账号标识和原始响应未写入仓库。
 
 ## 真相层边界
 
@@ -56,9 +57,9 @@
 - [x] 医学分析层：体检/血检、补剂、GLP-1、运动、睡眠、趋势分析。
 - [x] 输入方式面向真实使用：文字、图片/截图、Telegram/OpenClaw 对话。
 - [x] 安全边界明确：不做诊断，不开处方；医学建议必须附免责声明。
-- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖与 synthetic 非零场景已验证；Phase 2C 截图录入已有 synthetic mapping fixture 验证，真实截图/OCR runtime 验证与更完整回归 fixtures 尚未完成。
+- [ ] 自动化闭环尚未完整：日结算、周报、月报运行态已启用，零覆盖与 synthetic 非零场景已验证；Google Health API read smoke 已通过，但正式 importer、token refresh、幂等写入和 runtime smoke 尚未完成；截图录入保留为 fallback synthetic mapping。
 - [x] 跨维度洞察静态合同已完成：C8 workflow、报告 section contract、数据不足固定行为和 sufficient/insufficient synthetic validator 已定义。
-- [ ] 跨维度洞察 runtime 尚未重新验证：真实截图/OCR runtime smoke、C8 runtime smoke、长期趋势仍是后续项。
+- [ ] 跨维度洞察 runtime 尚未重新验证：Google Health API import smoke、C8 runtime smoke、长期趋势仍是后续项。
 
 ## 旧计划拆期
 
@@ -86,7 +87,7 @@
 
 ### 原阶段 2：自动化与报告
 
-目标：打通每日、每周、每月自动化，再加入 Apple Watch / Apple Health 截图优先录入。
+目标：打通每日、每周、每月自动化，再接入 Apple Health / HealthKit 运动、步数、睡眠数据；当前主路径改为 Google Health API。
 
 原计划交付：
 
@@ -100,10 +101,10 @@
 - [x] 定义月报生成 prompt，读取 `workspace/data/YYYY-MM/*.json`：见 `docs/report-automation.md`。
 - [x] 定义周报/月报写入 `workspace/reports/` 的仓库侧规格与模板；runtime 零覆盖场景已验证。
 - [x] 定义周报/月报前缺失日期结算/补结算规则；runtime 零覆盖场景已验证。
-- [x] 定义单张 Apple Watch / Apple Health 运动、活动、睡眠截图录入合同。
+- [x] 定义 Google Health API 设备数据接入合同；单张 Apple Watch / Apple Health 截图保留为 fallback。
 - [x] 增加结算/报告回归用的样例数据或 fixtures。
 
-状态：**运行态已接上并自然运行；零覆盖、synthetic 非零报告验证和截图录入 synthetic mapping fixture 验证已完成，真实截图/OCR runtime 验证与更完整回归 fixtures 尚未完成**。
+状态：**运行态已接上并自然运行；零覆盖、synthetic 非零报告验证和截图 fallback synthetic mapping fixture 验证已完成；Google Health API read smoke 已通过，正式 importer/runtime 尚未完成**。
 
 ### 原阶段 3：深度分析
 
@@ -123,7 +124,7 @@
 - [x] 药物/运动/睡眠分析已有 `analysis_summaries` 结构化摘要合同，可供趋势分析复用。
 - [x] `profile` 与 `goals` 模板已扩展：运动背景、器材、用药状态、睡眠目标与边界等字段。
 
-状态：**C8 静态合同、M1/E1/S1 repo 层报告合同、模板接入和 synthetic 示例已完成；真实 OCR/C8 runtime smoke 与 M1/E1/S1 runtime 自动报告验证递延到用户集中测试**。
+状态：**C8 静态合同、M1/E1/S1 repo 层报告合同、模板接入和 synthetic 示例已完成；Google Health API import、C8 runtime smoke 与 M1/E1/S1 runtime 自动报告验证递延到用户集中测试**。
 
 ### 原阶段 4：打磨与文档
 
@@ -139,11 +140,11 @@
 - [x] 在仓库中放入完整 PRD，或放入明确的 canonical PRD 指针：见 `docs/PRD.md`。
 - [x] 运行态操作手册：区分 repo sync 与 OpenClaw runtime sync。
 - [x] README 当前能力介绍已合并 Phase 2B runtime 进展。
-- [x] 模型策略已重写为多模型口径；截图/照片能力必须具备多模态 image-recognition/OCR。
+- [x] 模型策略已重写为多模型口径；设备数据主路径不依赖读图，食物照片、营养标签、体检单和截图 fallback 仍要求多模态 image-recognition/OCR。
 - [x] 食物库数量漂移需修正：旧文 `1677`，当前核实 `1657`。
 - [x] 发布前检查入口已建立并已运行本轮 secret pattern scan、ignored runtime check、Markdown link / repository contract validators、daily JSON / report contract validators、`git diff --check`。
 
-状态：**Phase 4A 保守发布打磨已完成到 repo 层；真实截图/OCR、C8 和 M1/E1/S1 runtime 自动报告验证仍需集中测试后再升级公开声明**。
+状态：**Phase 4A 保守发布打磨已完成到 repo 层；Google Health API importer/runtime、截图 fallback、C8 和 M1/E1/S1 runtime 自动报告验证仍需集中测试后再升级公开声明**。
 
 ## 前后依赖
 
@@ -159,7 +160,7 @@ flowchart TD
   E --> I["月报"]
   H --> J["跨维度洞察"]
   I --> J
-  K["截图录入运动/睡眠"] --> D
+  K["Google Health API 导入运动/步数/睡眠"] --> D
   L["profile/goals 模板"] --> B
   L --> M["药物/运动/睡眠个性化分析"]
   M --> J
@@ -177,7 +178,7 @@ flowchart TD
 - [x] 必须先有运行态文档，再继续新增 OpenClaw cron job，避免 runtime 只存在聊天记录里。
 - [x] 静态报告模板已稳定，跨维度洞察已有章节落点。
 - [ ] runtime-proven 报告模板仍待 C8 runtime smoke 验证。
-- [x] Phase 2C 第一版不依赖 parser；设计目标是截图记录先追加到每日 Markdown，再由现有零点结算进入每日 JSON。
+- [x] Phase 2C 第一版不依赖 Apple Health XML/CSV parser；设计目标改为 Google Health API 导入结果先追加到每日 Markdown，再由现有零点结算进入每日 JSON。
 - [x] 必须先有足够的运动/睡眠结构化 JSON，才能稳定纳入趋势自动化：已用 non-private synthetic fixtures 覆盖。
 - [x] 必须先有测试样例，才能安全迭代结算/报告 prompt：已补 settlement prompt synthetic regression、M1/E1/S1 synthetic 示例、daily JSON schema validator 与 report contract validator。
 
@@ -185,7 +186,7 @@ flowchart TD
 
 - [ ] 更多个人基线数据会提升建议质量，但不阻塞阶段 2。
 - [ ] 更多自建食物库数据会提升饮食精度，但不阻塞报告。
-- [x] 模型选择影响 OCR/Vision 质量，但不应改变仓库路径合同。
+- [x] 模型选择影响 OCR/Vision 质量，但不应改变仓库路径合同；Google Health API 路径更依赖 OAuth/token 安全和字段映射。
 
 ## 已完成清单
 
@@ -257,13 +258,14 @@ flowchart TD
   - 周报/月报：`announce`；无数据输出 `NO_REPLY`
 - [x] 将手动验证命令写入文档。
 
-### Apple Watch / Apple Health 截图录入
+### Google Health API / Apple Health 设备数据接入
 
-- [x] 第一版输入源决策：选择截图优先；暂不做导出 XML、Health Auto Export CSV/JSON 或原生 parser。
-- [x] A4 定义 Apple Watch workout 截图、Apple Health workout/activity 截图和手动运动描述的录入合同。
-- [x] A4 定义 workout 截图提取日期、运动类型、时长、active calories、来源；活动摘要截图只进入日级 steps / active calories。
-- [x] A6 支持 Apple Watch / Apple Health 睡眠截图和手动睡眠记录。
-- [x] A6 从截图提取日期、睡眠时长、来源；可选开始/结束时间、卧床时间、效率、阶段、质量。
+- [x] 更新输入源决策：Google Health API 取代截图优先，成为运动、步数、睡眠设备数据的主路径。
+- [x] 2026-05-28 人工 OAuth read smoke 已验证 `steps`、`sleep`、`exercise` 可读，且来源包含 HealthKit / Apple。
+- [ ] 实现正式 importer：OAuth client、token refresh、本地 ignored token cache、日期窗口拉取、幂等写入和短窗口 runtime smoke。
+- [x] A4 定义 Google Health API 导入结果、Apple Health 截图 fallback 和手动运动描述的录入合同。
+- [x] A6 支持 Google Health API 导入结果、Apple Health 睡眠截图 fallback 和手动睡眠记录。
+- [x] 旧截图路径降级为 fallback：从截图提取日期、运动/睡眠字段和来源；低置信度必须用户确认。
 - [x] 定义截图识别结果追加到当日日志的固定 Markdown 形状，并用 synthetic mapping fixture 验证到 expected JSON 的映射。
 - [x] 增加不含个人健康数据的截图/日志样例 fixture。
 
@@ -343,22 +345,27 @@ flowchart TD
 - [x] 无数据分支不会产生 Telegram 噪音。
 - [x] 非零样例数据场景可生成摘要并回写报告。
 
-### 阶段 2C：Apple Watch / Apple Health 截图最小闭环
+### 阶段 2C：Google Health API 设备数据接入
 
-目的：先提供从单张截图到每日日志、再到每日 JSON 的可重复路径；不引入批量导入脚本。
+目的：先把已验证的 Google Health API 只读路径变成本地可回归导入流程；截图路径保留为 fallback，不再作为主线。
 
-- [x] 选择第一版支持的源格式：截图优先。
-- [x] 更新 `SKILL.md` 的 A4/A6 截图识别与确认规则。
-- [x] 为截图字段补充 schema 文档。
+- [x] 选择第一版支持的源格式：Google Health API 优先，截图 fallback。
+- [x] 更新 `SKILL.md` 的 A4/A6 Google Health API 导入结果与截图 fallback 规则。
+- [x] 为 Google Health API 来源字段与截图 fallback 字段补充 schema 文档。
 - [x] 增加 README 能力声明和模型要求。
-- [x] 区分 workout 截图与活动摘要截图，避免把步数/活动摘要写成单次运动。
-- [x] 增加样例 fixture。
+- [x] 区分 workout 与活动摘要，避免把步数/活动摘要写成单次运动。
+- [x] 增加 Google Health API 接入决策文档和安全边界。
+- [x] 增加 legacy screenshot 样例 fixture。
 - [x] 用 synthetic mapping fixture 验证已确认截图识别结果能进入当日日志，并映射到 expected 每日 JSON。
+- [ ] 实现 Google Health API importer 与 token refresh。
+- [ ] 用 ignored `workspace/` 短窗口数据完成 Google Health API import runtime smoke。
 
 退出标准：
 
-- [x] 一张运动/活动截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
-- [x] 一张睡眠截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
+- [x] Google Health API read smoke 能读取 HealthKit 来源的步数、睡眠和运动。
+- [ ] Google Health API importer 可把短窗口数据转为当日日志或合法标准 JSON。
+- [x] fallback 运动/活动截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
+- [x] fallback 睡眠截图的已确认识别结果可转为当日日志记录，并映射为合法标准 JSON。
 - [x] 仓库不提交个人健康 fixture。
 
 ### 阶段 3A：跨维度洞察
@@ -405,6 +412,7 @@ flowchart TD
 
 ### 数据与集成
 
+- [ ] Google Health API importer：OAuth client、token refresh、本地 token cache、steps/sleep/exercise 拉取、幂等写入。
 - [ ] Apple Health 原生 XML parser，用于未来历史批量导入。
 - [ ] Health Auto Export 集成，用于未来定期导入 Apple Health CSV/JSON。
 - [ ] Withings/体脂秤导入体重与身体成分。
@@ -449,8 +457,9 @@ flowchart TD
 - [x] **修 Phase 1 文档漂移**：补 `docs/PRD.md`，把 `.env.example` 加入 README 目录树，并刷新当前基线。
 - [x] **写明 Phase 3A C8 runtime smoke 计划**：见 `plans/phase3a-c8-runtime-smoke.md`。
 - [x] **评估 Phase 4A 启动前置**：见 `plans/phase4a-readiness-assessment.md`。
-- [ ] **集中测试 1：真实截图/OCR runtime smoke**（需用户提供真实或脱敏截图，已暂缓）。
+- [ ] **集中测试 1：Google Health API import runtime smoke**（需用户确认 OAuth、token 本地保存路径和测试窗口）。
+- [ ] **集中测试 1b：真实截图/OCR fallback runtime smoke**（仅 fallback，需用户提供真实或脱敏截图，已暂缓）。
 - [ ] **集中测试 2：C8 runtime smoke**（可能触发 Telegram announce，已暂缓）。
 - [x] **Phase 4A 发布打磨**：已补 CHANGELOG、公开发布 checklist、隐私/医学边界、模型策略和保守发布口径。
 
-原因：周报/月报依赖稳定每日 JSON；当前 repo 层已完成 A/B/C 中无需用户介入的验证底座、深度分析报告合同和 Phase 4A 保守发布打磨。真实截图/OCR runtime smoke、C8 runtime smoke、个人基线/食物库补充递延到用户集中测试；D/E/F 外部集成、UX 扩展和 dashboard 先挂起。
+原因：周报/月报依赖稳定每日 JSON；当前 repo 层已完成 A/B/C 中无需用户介入的验证底座、深度分析报告合同和 Phase 4A 保守发布打磨。运动/步数/睡眠的主入口已从截图改为 Google Health API，下一步应做 importer/token 安全与短窗口 runtime smoke；C8 runtime smoke、个人基线/食物库补充递延到用户集中测试；D/E/F 外部集成、UX 扩展和 dashboard 先挂起。

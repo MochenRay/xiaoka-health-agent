@@ -23,13 +23,28 @@
 
 这些验证不得写 `~/.openclaw/cron/jobs.json`，不得写 runtime personal data，不得触发 Telegram。
 
+## True Google Health API Ingestion Smoke
+
+真实 Google Health API ingestion smoke 指使用用户已授权的 Google OAuth，只读拉取短日期窗口的
+`steps`、`sleep` 和 `exercise`，把规范化结果写入 ignored `workspace/`，再检查日报、周报或
+月报是否按既有数据门槛工作。
+
+状态：read smoke 已在 2026-05-28 通过；importer/runtime 写入 smoke 未完成。
+
+执行要求：
+
+- 只能在用户明确确认 OAuth 授权和测试窗口后运行。
+- 不打印、不保存 access token、refresh token、client secret、账号 email、health user id 或完整原始响应。
+- 测试前备份会被写入的 `workspace/logs/`、`workspace/data/` 和 `workspace/reports/` 目标路径。
+- 若触发 OpenClaw 周报/月报，先确认 Telegram delivery 行为。
+
 ## True OCR Runtime Smoke
 
 真实截图/OCR runtime smoke 指使用真实 OpenClaw runtime，让截图识别结果进入
 `workspace/logs/YYYY-MM/DD.md` 和 `workspace/data/YYYY-MM/DD.json`，再检查字段映射、
 置信度和用户确认边界。
 
-递延状态：递延到用户集中测试。
+递延状态：降级为 fallback 测试，不再作为运动、步数、睡眠设备数据的主路径。
 
 递延原因：
 
@@ -59,6 +74,7 @@
 - 自建食物库扩充。
 - 运动、睡眠和长期趋势样本积累。
 - 真实截图/OCR 纠错记录。
+- Google Health API token refresh、导入幂等和字段映射。
 - 任何可识别个人的健康资料。
 
 ## Runtime 执行前硬门槛

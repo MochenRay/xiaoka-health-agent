@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Phase 2C screenshot-first fixture contracts."""
+"""Validate Phase 2C screenshot fallback fixture contracts."""
 
 from __future__ import annotations
 
@@ -297,7 +297,7 @@ def main() -> int:
     data = load_json(JSON_PATH)
     validate_json(data, workout, activity, sleep)
 
-    print("validated Phase 2C screenshot-first fixtures")
+    print("validated Phase 2C screenshot fallback fixtures")
     print("covered: workout screenshot, activity summary screenshot, sleep screenshot")
     print("validated mapping: recognized result -> Markdown append shape -> expected daily JSON")
     return 0

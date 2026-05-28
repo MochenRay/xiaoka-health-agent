@@ -12,9 +12,9 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 2. 食物文字/食物照片/菜单截图 → **A1**
 3. 体重数字（如"85.2""今天 84kg"） → **A2**
 4. 体检报告照片/医学指标数据 → **A3**
-5. 运动描述/Apple Watch 或 Apple Health 运动/活动截图 → **A4**
+5. 运动描述/Google Health API 导入结果/Apple Health 截图 fallback → **A4**
 6. 补剂/保健品相关 → **A5**
-7. 睡眠时长/质量/Apple Watch 或 Apple Health 睡眠截图 → **A6**
+7. 睡眠时长/质量/Google Health API 导入结果/Apple Health 截图 fallback → **A6**
 8. 营养成分表照片/"记住这个食物" → **A7**
 9. "更新 profile"/调整目标/修改个人信息 → **A8**
 10. 用户问"我该不该用减肥药"/GLP-1/司美格鲁肽相关决策 → **M1 药物评估**
@@ -73,10 +73,10 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 ## A4 运动记录
 
-- 支持 Apple Watch 运动截图、Apple Health 运动/活动截图、手动运动描述
-- 运动截图必取：日期、运动类型、时长、active calories、来源；可取：步数、距离、开始/结束时间
-- 活动摘要截图只记录日级 steps / active calories / 来源；除非截图明确显示单次运动类型+时长，否则不要写成一条运动
-- 若必取字段含来源不能识别，先请用户确认；不要编造
+- 设备数据主路径是 Google Health API 导入结果；截图仅作为 fallback，手动运动描述继续支持
+- Google Health API 记录应保留日期、类型、时长/区间、steps 或 active calories、来源；不得写 token、账号 email 或 health user id
+- fallback 截图必取：日期、运动类型或活动摘要、时长/steps/active calories、来源；低置信度先请用户确认
+- 活动摘要只记录日级 steps / active calories / 来源；除非明确显示单次运动类型+时长，否则不要写成一条运动
 - 无设备数据 → MET 值估算（参考 `references/exercise.md`）+ 体重计算消耗，并标注估算
 - 追加到当日日志运动区；后续仍由现有零点结算写入 `workspace/data/YYYY-MM/DD.json`
 - 运动追加格式：`### 运动 HH:MM` + 表格列 `日期|类型|时长min|active calories|来源|备注`
@@ -92,9 +92,9 @@ triggers: [健康, 饮食, 体重, 卡路里, 热量, 蛋白质, 体检, 运动,
 
 ## A6 睡眠记录
 
-- 支持手动睡眠时长/质量，也支持 Apple Watch 或 Apple Health 睡眠截图
-- 截图必取：日期、睡眠时长、来源；可取：开始/结束时间、卧床时间、睡眠效率、睡眠阶段、质量
-- 若必取字段含来源不能识别，先请用户确认；不要编造
+- 支持手动睡眠时长/质量；设备数据主路径是 Google Health API 导入结果，Apple Health 睡眠截图仅作 fallback
+- Google Health API 记录应保留日期、睡眠区间/时长、来源；不得写 token、账号 email 或 health user id
+- fallback 截图必取：日期、睡眠时长、来源；可取：开始/结束时间、卧床时间、睡眠效率、睡眠阶段、质量；低置信度先确认
 - 追加到当日日志睡眠区；后续仍由现有零点结算写入 `workspace/data/YYYY-MM/DD.json`
 - 睡眠追加格式：`### 睡眠 YYYY-MM-DD` + 表格列 `日期|睡眠时长h|开始|结束|来源|质量|备注`
 

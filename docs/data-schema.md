@@ -47,7 +47,8 @@
         "distance_km": 1.2,
         "start_time": "19:20",
         "end_time": "20:00",
-        "source": "apple_watch_workout_screenshot",
+        "source": "google_health_api_healthkit",
+        "source_platform": "HEALTH_KIT",
         "confidence": "high",
         "note": ""
       }
@@ -55,17 +56,20 @@
   },
   "activity_summary": {
     "active_energy_kcal": 520,
-    "source": "apple_health_activity_screenshot",
+    "source": "google_health_api_healthkit",
+    "source_platform": "HEALTH_KIT",
     "confidence": "medium",
     "note": ""
   },
   "steps": {
     "count": 8200,
-    "source": "apple_health_activity_screenshot"
+    "source": "google_health_api_healthkit",
+    "source_platform": "HEALTH_KIT"
   },
   "sleep": {
     "duration_h": 7.5,
-    "source": "apple_health_sleep_screenshot",
+    "source": "google_health_api_healthkit",
+    "source_platform": "HEALTH_KIT",
     "start_time": "23:40",
     "end_time": "07:10",
     "time_in_bed_h": 8.0,
@@ -174,26 +178,30 @@
 | `exercise.activities[].type` | string | 是(per act) | 运动类型 |
 | `exercise.activities[].duration_min` | number | 否 | 时长（分钟） |
 | `exercise.activities[].calories` | number | 否 | 消耗热量 |
-| `exercise.activities[].active_energy_kcal` | number | 否 | 截图识别出的 active calories；无设备数据时可为空 |
-| `exercise.activities[].source` | string | 否 | "manual" / "apple_watch_workout_screenshot" / "apple_health_workout_screenshot" |
-| `exercise.activities[].start_time` | string | 否 | 开始时间 HH:MM，截图可识别时填写 |
-| `exercise.activities[].end_time` | string | 否 | 结束时间 HH:MM，截图可识别时填写 |
-| `exercise.activities[].distance_km` | number | 否 | 距离（km），截图可识别时填写 |
-| `exercise.activities[].steps` | number | 否 | 该次活动步数，截图可识别时填写 |
+| `exercise.activities[].active_energy_kcal` | number | 否 | 设备或截图给出的 active calories；无设备数据时可为空 |
+| `exercise.activities[].source` | string | 否 | "manual" / "google_health_api" / "google_health_api_healthkit" / legacy screenshot source |
+| `exercise.activities[].source_platform` | string | 否 | Google Health API 来源平台，如 "HEALTH_KIT"；不写用户 id |
+| `exercise.activities[].start_time` | string | 否 | 开始时间 HH:MM，可识别或 API 可映射时填写 |
+| `exercise.activities[].end_time` | string | 否 | 结束时间 HH:MM，可识别或 API 可映射时填写 |
+| `exercise.activities[].distance_km` | number | 否 | 距离（km），可识别或 API 可映射时填写 |
+| `exercise.activities[].steps` | number | 否 | 该次活动步数，可识别或 API 可映射时填写 |
 | `exercise.activities[].confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
 | `exercise.activities[].note` | string | 否 | 备注或用户确认信息 |
-| `activity_summary.active_energy_kcal` | number | 否 | 活动摘要截图里的日级 active energy；不是单次 workout |
-| `activity_summary.source` | string | 否 | "apple_health_activity_screenshot" / "apple_watch_activity_screenshot" / "manual" |
+| `activity_summary.active_energy_kcal` | number | 否 | 日级 active energy；不是单次 workout |
+| `activity_summary.source` | string | 否 | "manual" / "google_health_api" / "google_health_api_healthkit" / legacy screenshot source |
+| `activity_summary.source_platform` | string | 否 | Google Health API 来源平台，如 "HEALTH_KIT"；不写用户 id |
 | `activity_summary.confidence` | string | 否 | "high" / "medium" / "low"；低置信度应先询问确认 |
 | `activity_summary.note` | string | 否 | 备注或用户确认信息 |
 | `steps.count` | number | 否 | 当日步数；未记录则 steps 可为空 |
-| `steps.source` | string | 否 | "manual" / "apple_health_activity_screenshot" / "apple_watch_activity_screenshot" |
+| `steps.source` | string | 否 | "manual" / "google_health_api" / "google_health_api_healthkit" / legacy screenshot source |
+| `steps.source_platform` | string | 否 | Google Health API 来源平台，如 "HEALTH_KIT"；不写用户 id |
 | `sleep.duration_h` | number | 否 | 睡眠时长（小时） |
-| `sleep.source` | string | 否 | "manual" / "apple_watch_sleep_screenshot" / "apple_health_sleep_screenshot" |
-| `sleep.start_time` | string | 否 | 睡眠开始时间 HH:MM，截图可识别时填写 |
-| `sleep.end_time` | string | 否 | 睡眠结束时间 HH:MM，截图可识别时填写 |
-| `sleep.time_in_bed_h` | number | 否 | 卧床时间（小时），截图可识别时填写 |
-| `sleep.efficiency_pct` | number | 否 | 睡眠效率百分比，截图可识别时填写 |
+| `sleep.source` | string | 否 | "manual" / "google_health_api" / "google_health_api_healthkit" / legacy screenshot source |
+| `sleep.source_platform` | string | 否 | Google Health API 来源平台，如 "HEALTH_KIT"；不写用户 id |
+| `sleep.start_time` | string | 否 | 睡眠开始时间 HH:MM，可识别或 API 可映射时填写 |
+| `sleep.end_time` | string | 否 | 睡眠结束时间 HH:MM，可识别或 API 可映射时填写 |
+| `sleep.time_in_bed_h` | number | 否 | 卧床时间（小时），可识别或 API 可映射时填写 |
+| `sleep.efficiency_pct` | number | 否 | 睡眠效率百分比，可识别或 API 可映射时填写 |
 | `sleep.stages.awake_min` | number | 否 | 清醒分钟数 |
 | `sleep.stages.rem_min` | number | 否 | REM 睡眠分钟数 |
 | `sleep.stages.core_min` | number | 否 | 核心睡眠分钟数 |
@@ -226,15 +234,23 @@
 - 药物、体检、睡眠红旗内容只能作为提醒，不构成诊断、处方或自行调整剂量建议。
 - 详细报告合同见 `docs/deep-analysis-report-contract.md`。
 
-### 截图优先字段约定
+### Google Health API 优先字段约定
 
-- Apple Watch / Apple Health 截图字段都是可选增强字段，不要求历史批量导入。
-- `exercise.activities[]` 只记录单次 workout；活动/步数/消耗摘要截图写入 `activity_summary` 与 `steps`，不要伪装成单次运动。
+- Google Health API 是 Apple Health / HealthKit 运动、步数、睡眠数据的主接入路径；截图仅作为 fallback。
+- `steps` 优先使用 `dataTypes/steps/dataPoints:dailyRollUp` 生成日级 count；原始 data points 可用于排查，但不应长期保存完整响应。
+- `sleep` 与 `exercise` 先按日期窗口读取 data points，再规范化到当日日志或 daily JSON。
+- `exercise.activities[]` 只记录单次 workout；活动/步数/消耗摘要写入 `activity_summary` 与 `steps`，不要伪装成单次运动。
+- daily JSON 可保存 `source_platform`、`source_application`、`source_device_form_factor` 等非敏感来源字段；不得保存 token、账号 email、`healthUserId`、`legacyUserId` 或完整原始响应。
+- 日级可选对象如 `nutrition`、`exercise`、`activity_summary`、`steps`、`sleep` 可缺省或为 `null`；不要用 `0` 代表未知。
+- Google Health API 接入细节见 `docs/google-health-api-ingestion.md`。
+
+### 截图 fallback 字段约定
+
+- Apple Watch / Apple Health 截图字段都是可选 fallback 字段，不要求历史批量导入。
 - 运动截图必须能识别日期、运动类型、时长、active calories 和来源；活动摘要截图必须能识别日期、steps 或 active calories、来源；睡眠截图必须能识别日期、睡眠时长和来源。
 - 若必填识别项缺失或 `confidence` 为 `low`，Agent 应先向用户确认，不应自行补全。
-- 日级可选对象如 `nutrition`、`exercise`、`activity_summary`、`steps`、`sleep` 可缺省或为 `null`；不要用 `0` 代表未知。
-- Synthetic screenshot-first fixture 位于 `fixtures/synthetic/phase2c/`，只验证已确认识别结果到 Markdown 与 expected JSON 的字段映射，不验证 OCR 质量或 runtime 结算。
-- 本 schema 不定义 XML、CSV 或 parser staging schema；未来如做批量导入再单独扩展。
+- Synthetic screenshot fixture 位于 `fixtures/synthetic/phase2c/`，只验证已确认识别结果到 Markdown 与 expected JSON 的字段映射，不验证 OCR 质量或 runtime 结算。
+- 本 schema 不定义 Apple Health XML、Health Auto Export CSV/JSON 或 parser staging schema；未来如做文件式批量导入再单独扩展。
 
 ## 自建食物库 JSON
 

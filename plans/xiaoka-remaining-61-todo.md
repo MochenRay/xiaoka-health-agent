@@ -1,23 +1,23 @@
-# 小卡剩余 61 项依赖待办清单
+# 小卡剩余依赖待办清单
 
 > 生成基线：2026-05-27 CST，`main` / `f430ee0`
-> 当前裁剪：真实 OCR/C8 runtime smoke、个人基线和自建食物库补充等需用户介入项，先递延到用户集中测试；D/E/F 组整体挂起。
-> 来源：`plans/xiaoka-project-roadmap-checklist.md` 中全部未勾选项，共 61 项。
-> 说明：本清单保留 Roadmap 的 61 个未完成映射；若多项同义或重复，实施时可用同一个切片同时关闭多处来源。
+> 当前裁剪：Google Health API importer/runtime、C8 runtime smoke、个人基线和自建食物库补充等需用户介入项，先递延到用户集中测试；文件式导入、UX 和 dashboard 仍整体挂起。
+> 来源：`plans/xiaoka-project-roadmap-checklist.md` 中未勾选项；2026-05-28 起新增 Google Health API importer 主线。
+> 说明：本清单保留原 Roadmap 未完成映射；若多项同义或重复，实施时可用同一个切片同时关闭多处来源。
 
 ## 依赖顺序
 
 1. 先补 runtime smoke 与可回归测试底座。
 2. 再接深度分析能力，因为 M1/E1/S1、C8 runtime 都依赖稳定 daily JSON、报告 prompt 和样例。
 3. 再做 Phase 4A 发布打磨，避免公开文案超过真实实现。
-4. 最后推进数据集成、体验命令和可视化扩展。
+4. 最后推进文件式数据集成、体验命令和可视化扩展。
 
 ## A. Runtime Smoke 与测试底座
 
-- [ ] R01. 完成真实截图/OCR runtime 验证，并补更完整回归 fixtures。来源：Roadmap L59。
-  - Worker A 2026-05-27：真实 OCR runtime smoke 递延到用户集中测试；本轮只补仓库侧 fixture/schema validator 与边界文档，见 `docs/runtime-smoke-boundary.md`。
-- [ ] R02. 执行“真实截图/OCR runtime smoke”这个当前最佳下一步。来源：Roadmap L452。
-  - Worker A 2026-05-27：不运行真实 OpenClaw cron、不触发 Telegram；执行条件记录在 `docs/runtime-smoke-boundary.md`。
+- [ ] R01. 完成 Google Health API importer/runtime 验证，并保留截图 fallback 回归 fixtures。来源：Roadmap L59。
+  - 2026-05-28：Google Health API read smoke 已通过；真实 OCR runtime smoke 降级为 fallback，边界见 `docs/runtime-smoke-boundary.md`。
+- [ ] R02. 执行“Google Health API import runtime smoke”这个当前最佳下一步。来源：Roadmap L452。
+  - 2026-05-28：必须先确认 OAuth、token 本地保存路径、测试窗口和 Telegram 行为；不得提交 token 或真实响应。
 - [x] R03. 积累或构造足够运动/睡眠结构化 JSON，作为趋势自动化输入。来源：Roadmap L181。
   - 2026-05-27：已以 non-private synthetic daily JSON 覆盖 exercise/sleep/C8/deep-analysis 输入；真实个人数据仍递延到用户集中测试。
 - [x] R04. 增加非私人路径下的样例数据。来源：Roadmap L289。
@@ -29,16 +29,16 @@
 - [x] R07. 增加 JSON schema validation。来源：Roadmap L439。
   - Worker A 2026-05-27：已新增 `scripts/validate_daily_json_schema.py`，覆盖 non-private synthetic daily JSON fixture 的日期、可选对象/null 字段、关键数值字段与 synthetic/no-real-person 合同。
 - [ ] R08. 增加 Mac Mini OpenClaw runtime smoke test 脚本。来源：Roadmap L435。
-  - Worker A 2026-05-27：runtime smoke 脚本未实现；本轮只冻结执行边界，true OCR/C8 runtime smoke 递延到用户集中测试。
+  - Worker A 2026-05-27：runtime smoke 脚本未实现；2026-05-28 后主线改为 Google Health API import smoke，C8 runtime smoke 仍递延到用户集中测试。
 - [x] R09. 增加 Mac Mini OpenClaw pull 后的人工验收 checklist。来源：Roadmap L290。
   - Worker A 2026-05-27：已新增 `docs/mac-mini-pull-acceptance-checklist.md`，限定 pull 验收为 fast-forward 与仓库 validator，不改 cron、不写 personal data、不触发 Telegram。
 - [x] R10. 明确模型选择只影响 OCR/Vision 质量，不改变仓库路径合同。来源：Roadmap L188。
-  - 2026-05-27：README 与隐私/医学边界文档已改为多模型口径；截图/照片能力必须具备多模态/image-recognition/OCR。
+  - 2026-05-28：设备数据主路径改为 Google Health API；截图 fallback、照片、营养标签和体检单仍要求多模态/image-recognition/OCR。
 - [x] R11. 重新核验模型推荐区，尤其多模态能力；当前 runtime 模型为 `openai/gpt-5.4`。来源：Roadmap L237。
   - 2026-05-27：公开文案不再固定推荐单一模型，只写能力要求。
 - [x] R12. 公开发布前重新核验当前模型推荐。来源：Roadmap L142。
   - 2026-05-27：用户确认模型策略为“支持多模型，但截图能力必须具备多模态图像识别”。
-- [ ] R13. 重新验证跨维度洞察 runtime，包括真实截图/OCR runtime smoke、C8 runtime smoke 和长期趋势。来源：Roadmap L61。
+- [ ] R13. 重新验证跨维度洞察 runtime，包括 Google Health API import smoke、C8 runtime smoke 和长期趋势。来源：Roadmap L61。
   - Worker A 2026-05-27：本轮新增 `scripts/validate_report_contracts.py` 仅验证 static report contract；runtime 与长期趋势仍递延到用户集中测试。
 - [ ] R14. 执行“C8 runtime smoke”这个当前最佳下一步。来源：Roadmap L453。
   - Worker A 2026-05-27：C8 runtime smoke 未执行；边界与准入条件见 `docs/runtime-smoke-boundary.md`。
@@ -96,8 +96,10 @@
 
 ## D. 数据与集成扩展
 
-> 状态注记（2026-05-27）：D 组外部数据/集成扩展已暂停并延后；不得纳入本轮
-> Phase 4A 公开发布能力声明。
+> 状态注记（2026-05-28）：Google Health API 已从扩展方向提升为设备数据主路径；
+> Apple Health XML、Health Auto Export、Withings 等文件式/外部集成继续暂停并延后。
+
+- [ ] R50a. 实现 Google Health API importer：OAuth client、token refresh、本地 ignored token cache、steps/sleep/exercise 拉取和幂等写入。来源：2026-05-28 设备数据主路径更新。
 
 - [ ] R50. 增加 Apple Health 原生 XML parser，用于未来历史批量导入。来源：Roadmap L408。
 - [ ] R51. 增加 Health Auto Export 集成，用于未来定期导入 Apple Health CSV/JSON。来源：Roadmap L409。

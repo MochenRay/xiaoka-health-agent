@@ -3,6 +3,31 @@
 本文件记录公开发布口径下可以稳定描述的能力、验证证据和仍待 runtime
 smoke 的项目。公开 README、发布页和对外介绍应以本文件与发布 checklist 为边界。
 
+## Unreleased - Google Health API ingestion decision
+
+日期：2026-05-28 CST
+
+### Changed
+
+- 运动、步数和睡眠设备数据的主接入路径改为 Google Health API。
+- Apple Watch / Apple Health 截图从主路径降级为 fallback；既有 Phase 2C synthetic
+  fixture 只继续证明截图识别结果到 daily JSON 的 mapping。
+- README、PRD、SKILL、数据 schema、隐私边界、runtime smoke 边界和发布 checklist
+  已同步该口径。
+
+### Verified
+
+- 通过人工 OAuth read smoke 验证 Google Health API 可读取 `identity`、`steps`、
+  `sleep` 和 `exercise`。
+- 返回来源包含 HealthKit / Apple 来源，证明 iOS Apple Health 经 Google Health API
+  的读取路径可行。
+
+### Pending
+
+- 正式 OAuth client 配置、token refresh、本地 token cache、导入脚本、幂等写入和
+  OpenClaw runtime smoke 尚未实现。
+- 不得把本次人工验证中的 token、账号标识、原始响应或真实健康明细写入仓库。
+
 ## Unreleased - Phase 4A release hardening
 
 日期：2026-05-27 CST

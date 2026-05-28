@@ -15,17 +15,19 @@
 - 可以使用本地文件保存每日记录、整理后的每日数据、体检资料、报告和个人食物库。
 - 已经配置自动整理任务：每天整理前一天记录，每天检查记录是否一致，每周生成周报，每月生成月报。
 - 周报和月报已经通过“没有数据”和“示例数据”两类测试：没有数据时会保持安静，不会发送无意义提醒。
-- 已经定义 Apple Watch / Apple Health 的单张运动、活动、睡眠截图记录方式，并用示例数据验证了从“确认后的识别结果”到每日数据的整理流程。
+- 已经实测 Google Health API 可读取来自 iOS Apple Health / HealthKit 的步数、睡眠和运动数据；仓库内同步器尚未实现。
+- 已经定义 Apple Watch / Apple Health 截图 fallback，并用示例数据验证了从“确认后的识别结果”到每日数据的整理流程。
 - 已经定义跨维度观察，例如把饮食、体重、运动、活动和睡眠放在一起看；数据不足时会明确说数据不足，不会硬编结论。
 - 已经补充药物、运动、睡眠深度分析的报告模板和示例数据。
 - 已经补充公开发布前检查清单、隐私边界、医学边界和 AI 能力要求。
 
 仍在等待真实使用验证的部分：
 
-- 真实 Apple Watch / Apple Health 截图识别还没有完成集中测试。
+- Google Health API 的正式导入脚本、token refresh 和 OpenClaw runtime 同步还没有完成。
+- 真实 Apple Watch / Apple Health 截图识别不再是主路径，只作为 fallback 暂缓。
 - 跨维度观察还没有完成真实自动周报/月报测试。
 - 药物、运动、睡眠深度分析还没有完成真实自动报告测试。
-- Apple Health 历史批量导入、Health Auto Export、体脂秤导入、Telegram 快捷操作和静态数据看板暂未实现。
+- Apple Health XML、Health Auto Export、体脂秤导入、Telegram 快捷操作和静态数据看板暂未实现。
 
 ## 小卡能做什么
 
@@ -34,9 +36,9 @@
 | 健康档案 | 通过问答收集身高、体重、目标、活动水平、运动背景、用药和补剂背景 |
 | 饮食记录 | 记录文字描述、食物照片或菜单截图中的饮食信息，估算热量和营养素 |
 | 体重追踪 | 保存体重记录，观察近期变化和目标差距 |
-| 运动记录 | 记录手动运动描述，也支持整理单张 Apple Watch / Apple Health 运动截图中的关键信息 |
-| 活动记录 | 记录步数、活动消耗等日级活动摘要 |
-| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量，也支持整理单张睡眠截图中的关键信息 |
+| 运动记录 | 记录手动运动描述；设备数据主路径改为 Google Health API，截图仅作为 fallback |
+| 活动记录 | 记录步数、活动消耗等日级活动摘要；Google Health API 已实测可读 HealthKit 步数 |
+| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量；Google Health API 已实测可读 HealthKit 睡眠 |
 | 补剂管理 | 记录补剂和剂量，提醒可能需要注意的药物或补剂边界 |
 | 体检解读 | 整理体检指标，标记需要关注的异常项，但不替代医生诊断 |
 | 周报和月报 | 自动汇总一周或一个月的记录，写入报告文件 |
@@ -51,7 +53,8 @@
 - 不在数据不足时强行给出趋势或因果结论。
 - 不做实时运动追踪。
 - 不做食品条码扫描。
-- 当前不做 Apple Health 历史数据批量导入。
+- 当前还没有把 Google Health API 接入为正式自动同步器。
+- 当前不做 Apple Health XML、Health Auto Export 或其他文件式批量导入。
 - 当前不做体脂秤或其他外部设备自动导入。
 - 当前不自带远端数据库或账号系统。
 
@@ -74,7 +77,8 @@
 
 - 健康记录默认保存在本地电脑。
 - 如果你使用云端 AI 服务，发送给 AI 的文字、截图、图片和必要上下文可能会被服务提供商处理。
-- 如果你想尽量减少外部传输，可以改用本地 AI；但如果要处理截图或照片，本地 AI 也必须能识别图片。
+- 如果启用 Google Health API，同步请求会经过 Google OAuth 和 Google Health API；token 和原始响应不得提交到 GitHub。
+- 如果你想尽量减少外部传输，可以改用本地 AI；但如果要处理照片或截图，本地 AI 也必须能识别图片。
 - 小卡的输出只能作为记录整理和健康管理参考，不构成诊断、治疗方案或处方建议。
 
 更多边界说明见 [隐私与医学边界](docs/privacy-and-medical-boundaries.md)。
@@ -88,9 +92,10 @@
 - 能稳定理解中文健康记录。
 - 能按要求读写本地文件。
 - 能遵守“数据不足就不下结论”的规则。
-- 如果要处理食物照片、运动截图、睡眠截图、营养标签或体检单图片，AI 必须能理解图片或识别图片里的文字。
+- 如果要处理食物照片、营养标签或体检单图片，AI 必须能理解图片或识别图片里的文字。
+- 运动、步数和睡眠的设备数据主路径是 Google Health API，不要求模型读图；截图只作为 fallback。
 
-如果 AI 不能稳定识别图片，用户需要手动把截图里的关键字段转成文字，例如日期、来源、运动类型、时长、活动消耗、睡眠时长等。
+如果 AI 不能稳定识别图片，用户需要手动把图片里的关键字段转成文字；如果启用 Google Health API，则应优先走 OAuth 授权后的结构化同步。
 
 ## 快速开始
 
@@ -132,8 +137,8 @@ printf '[]\n' > workspace/food-library/my-foods.json
 ```
 
 ```text
-你：这是今天 Apple Watch 的运动截图
-小卡：我会先识别日期、运动类型、时长、活动消耗和来源；如果识别不确定，会先向你确认。
+你：同步最近两周的步数、睡眠和运动
+小卡：我会优先走 Google Health API 的只读同步；如果没有授权或接口不可用，再用手动记录或截图 fallback。
 ```
 
 ## 仓库内容
@@ -169,12 +174,13 @@ python3 scripts/validate_phase2c_screenshot_fixtures.py
 python3 scripts/validate_phase3a_c8_fixtures.py
 ```
 
-这些检查只能证明示例数据和仓库说明一致，不能证明真实截图识别、真实自动报告或个人健康数据已经完全闭环。
+这些检查只能证明示例数据和仓库说明一致，不能证明 Google Health API 正式自动同步、真实截图识别、真实自动报告或个人健康数据已经完全闭环。
 
 ## 更多文档
 
 - [最小使用约定](docs/phase1-minimum-contract.md)
 - [数据保存格式](docs/data-schema.md)
+- [Google Health API 接入决策](docs/google-health-api-ingestion.md)
 - [自动报告说明](docs/report-automation.md)
 - [OpenClaw 部署说明](deploy/openclaw-setup.md)
 - [Claude Code 部署说明](deploy/claude-code-setup.md)

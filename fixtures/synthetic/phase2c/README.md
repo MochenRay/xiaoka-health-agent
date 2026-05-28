@@ -1,7 +1,9 @@
-# Phase 2C Screenshot-First Fixtures
+# Phase 2C Screenshot Fallback Fixtures
 
-These fixtures validate the screenshot-first contract without using personal
-health data or Apple Health export files.
+These fixtures validate the legacy screenshot fallback contract without using
+personal health data, Google Health API responses, or Apple Health export files.
+As of 2026-05-28, Google Health API is the primary path for steps, sleep, and
+exercise device data.
 
 They intentionally avoid real screenshots. The `recognized/` JSON files are
 synthetic, already-confirmed OCR/Vision results for single screenshots. The
@@ -19,7 +21,8 @@ This validates:
   and expected standard daily JSON.
 
 This does not validate OCR quality, binary image rendering, runtime settlement,
-Apple Health XML, Health Auto Export, or any historical batch import parser.
+Google Health API import, Apple Health XML, Health Auto Export, or any
+historical batch import parser.
 
 Run:
 
