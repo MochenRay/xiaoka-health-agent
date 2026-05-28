@@ -1,33 +1,32 @@
 # 小卡健康 Agent
 
-小卡是一个用 AI 帮你记录和整理健康信息的个人健康助手。它可以记录饮食、体重、运动、睡眠、补剂和体检资料，并把这些记录整理成每日数据、周报和月报。
+小卡是一个本地文件驱动的 AI 健康助手。它帮助你记录饮食、体重、运动、睡眠、补剂和体检资料，并把这些记录整理成每日数据、周报和月报。
 
-这个仓库保存的是小卡的说明、规则、模板、知识库和示例数据。真实的个人健康数据默认保存在你自己的电脑里，不会提交到仓库。
+这个仓库保存的是 Agent 规则、模板、知识库、说明和非个人示例数据。真实健康数据默认保存在你自己的电脑里，不会提交到 GitHub。
 
 ## 当前状态
 
 小卡现在处于“可试用，但仍在完善”的阶段。
 
-已经完成并验证的部分：
+已经可用：
 
-- 可以引导创建个人健康档案和目标。
-- 可以记录饮食、体重、体检、运动、补剂、睡眠和目标调整。
-- 可以使用本地文件保存每日记录、整理后的每日数据、体检资料、报告和个人食物库。
-- 已经配置自动整理任务：每天整理前一天记录，每天检查记录是否一致，每周生成周报，每月生成月报。
-- 周报和月报已经通过“没有数据”和“示例数据”两类测试：没有数据时会保持安静，不会发送无意义提醒。
-- 已经实测 Google Health API 可读取来自 iOS Apple Health / HealthKit 的步数、睡眠和运动数据；仓库内同步器尚未实现。
-- 已经定义 Apple Watch / Apple Health 截图 fallback，并用示例数据验证了从“确认后的识别结果”到每日数据的整理流程。
-- 已经定义跨维度观察，例如把饮食、体重、运动、活动和睡眠放在一起看；数据不足时会明确说数据不足，不会硬编结论。
-- 已经补充药物、运动、睡眠深度分析的报告模板和示例数据。
-- 已经补充公开发布前检查清单、隐私边界、医学边界和 AI 能力要求。
+- 引导创建个人健康档案和目标。
+- 记录饮食、体重、体检、运动、补剂、睡眠和目标调整。
+- 使用本地文件保存每日记录、每日 JSON、体检资料、报告和个人食物库。
+- 通过 OpenClaw 定时任务整理前一天记录、校验结算、生成前日汇总、周报和月报。
+- 周报和月报已验证“无数据静默”和“synthetic 示例数据生成报告”两类场景。
+- Google Health API 已人工验证可读取来自 iOS Apple Health / HealthKit 的步数、睡眠和运动数据。
+- Apple Watch / Apple Health 截图保留为 fallback；仓库用 synthetic fixtures 验证确认后的识别结果如何进入每日数据。
+- 跨维度观察已定义：数据足够时低强度观察饮食、体重、运动、活动和睡眠之间的关系；数据不足时明确拒绝趋势或因果结论。
+- 药物、运动、睡眠深度分析已有报告合同和 synthetic 示例。
 
-仍在等待真实使用验证的部分：
+尚未完成：
 
-- Google Health API 的正式导入脚本、token refresh 和 OpenClaw runtime 同步还没有完成。
-- 真实 Apple Watch / Apple Health 截图识别不再是主路径，只作为 fallback 暂缓。
-- 跨维度观察还没有完成真实自动周报/月报测试。
-- 药物、运动、睡眠深度分析还没有完成真实自动报告测试。
-- Apple Health XML、Health Auto Export、体脂秤导入、Telegram 快捷操作和静态数据看板暂未实现。
+- Google Health API 正式 importer、token refresh、幂等写入和 OpenClaw runtime 同步。
+- 真实截图/OCR runtime smoke。
+- C8 跨维度观察的真实自动周报/月报 runtime smoke。
+- 药物、运动、睡眠深度分析的真实自动报告 runtime 验证。
+- Apple Health XML、Health Auto Export、体脂秤导入、Telegram 快捷操作和静态数据看板。
 
 ## 小卡能做什么
 
@@ -37,12 +36,12 @@
 | 饮食记录 | 记录文字描述、食物照片或菜单截图中的饮食信息，估算热量和营养素 |
 | 体重追踪 | 保存体重记录，观察近期变化和目标差距 |
 | 运动记录 | 记录手动运动描述；设备数据主路径改为 Google Health API，截图仅作为 fallback |
-| 活动记录 | 记录步数、活动消耗等日级活动摘要；Google Health API 已实测可读 HealthKit 步数 |
-| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量；Google Health API 已实测可读 HealthKit 睡眠 |
+| 活动记录 | 记录步数、活动消耗等日级活动摘要 |
+| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量 |
 | 补剂管理 | 记录补剂和剂量，提醒可能需要注意的药物或补剂边界 |
 | 体检解读 | 整理体检指标，标记需要关注的异常项，但不替代医生诊断 |
 | 周报和月报 | 自动汇总一周或一个月的记录，写入报告文件 |
-| 跨维度观察 | 在数据足够时，低强度观察饮食、体重、运动、活动和睡眠之间的关系 |
+| 跨维度观察 | 在数据足够时观察饮食、体重、运动、活动和睡眠之间的可能关系 |
 | 目标更新 | 调整体重、热量、蛋白质等目标 |
 | 健康问答 | 根据仓库里的营养、医学、运动、补剂和设备知识库回答问题 |
 
@@ -50,52 +49,13 @@
 
 - 不提供医疗诊断。
 - 不开处方，不建议自行调整处方药剂量。
-- 不在数据不足时强行给出趋势或因果结论。
+- 不在数据不足时强行给出趋势、因果或跨维度结论。
 - 不做实时运动追踪。
 - 不做食品条码扫描。
 - 当前还没有把 Google Health API 接入为正式自动同步器。
 - 当前不做 Apple Health XML、Health Auto Export 或其他文件式批量导入。
 - 当前不做体脂秤或其他外部设备自动导入。
 - 当前不自带远端数据库或账号系统。
-
-## 数据如何保存
-
-小卡使用本地文件保存数据。默认路径如下：
-
-| 内容 | 保存位置 |
-|------|----------|
-| 个人档案和目标 | `config/` |
-| 每天的文字记录 | `workspace/logs/` |
-| 每天整理后的数据 | `workspace/data/` |
-| 体检资料 | `workspace/medical/` |
-| 周报和月报 | `workspace/reports/` |
-| 个人食物库 | `workspace/food-library/` |
-
-`config/` 和 `workspace/` 中的个人文件默认不会提交到 GitHub。仓库里只保留模板、说明和非个人示例数据。
-
-## 隐私和医学边界
-
-- 健康记录默认保存在本地电脑。
-- 如果你使用云端 AI 服务，发送给 AI 的文字、截图、图片和必要上下文可能会被服务提供商处理。
-- 如果启用 Google Health API，同步请求会经过 Google OAuth 和 Google Health API；token 和原始响应不得提交到 GitHub。
-- 如果你想尽量减少外部传输，可以改用本地 AI；但如果要处理照片或截图，本地 AI 也必须能识别图片。
-- 小卡的输出只能作为记录整理和健康管理参考，不构成诊断、治疗方案或处方建议。
-
-更多边界说明见 [隐私与医学边界](docs/privacy-and-medical-boundaries.md)。
-
-## 对 AI 能力的要求
-
-小卡不绑定某一个固定 AI。不同使用环境可以选择不同 AI。
-
-基本要求：
-
-- 能稳定理解中文健康记录。
-- 能按要求读写本地文件。
-- 能遵守“数据不足就不下结论”的规则。
-- 如果要处理食物照片、营养标签或体检单图片，AI 必须能理解图片或识别图片里的文字。
-- 运动、步数和睡眠的设备数据主路径是 Google Health API，不要求模型读图；截图只作为 fallback。
-
-如果 AI 不能稳定识别图片，用户需要手动把图片里的关键字段转成文字；如果启用 Google Health API，则应优先走 OAuth 授权后的结构化同步。
 
 ## 快速开始
 
@@ -113,18 +73,16 @@ mkdir -p workspace/{logs,data,medical,reports,food-library}
 printf '[]\n' > workspace/food-library/my-foods.json
 ```
 
-### 3. 在你的 AI 工具中打开这个仓库
+### 3. 在 AI 工具中打开仓库
 
 可以使用 OpenClaw、Claude Code 或其他能读取本地仓库的 AI 工具。第一次对话时，小卡会先引导你创建个人健康档案。
-
-示例：
 
 ```text
 你：你好
 小卡：你好，我是小卡。你还没有配置健康档案，我先帮你完成初始化。
 ```
 
-## 示例使用方式
+示例：
 
 ```text
 你：午饭吃了一碗牛肉面加一个煎蛋
@@ -138,8 +96,23 @@ printf '[]\n' > workspace/food-library/my-foods.json
 
 ```text
 你：同步最近两周的步数、睡眠和运动
-小卡：我会优先走 Google Health API 的只读同步；如果没有授权或接口不可用，再用手动记录或截图 fallback。
+小卡：我会优先走 Google Health API；如果没有授权或接口不可用，再用手动记录或截图 fallback。
 ```
+
+## 数据如何保存
+
+小卡使用本地文件保存数据。默认路径如下：
+
+| 内容 | 保存位置 |
+|------|----------|
+| 个人档案和目标 | `config/` |
+| 每天的文字记录 | `workspace/logs/` |
+| 每天整理后的数据 | `workspace/data/` |
+| 体检资料 | `workspace/medical/` |
+| 周报和月报 | `workspace/reports/` |
+| 个人食物库 | `workspace/food-library/` |
+
+`config/profile.md`、`config/goals.md` 和 `workspace/` 中的个人文件默认不会提交到 GitHub。仓库里的 `fixtures/synthetic/` 是维护者验证用的非个人示例数据，新用户可以忽略。
 
 ## 仓库内容
 
@@ -151,18 +124,24 @@ printf '[]\n' > workspace/food-library/my-foods.json
 | `config/` | 个人档案和目标模板 |
 | `templates/` | 每日日志、周报、月报模板 |
 | `references/` | 营养、医学、药物、补剂、运动和设备知识库 |
-| `docs/` | 更详细的说明、数据格式、运行方式和边界 |
-| `fixtures/` | 不含个人健康数据的示例数据 |
-| `scripts/` | 用来检查示例数据和文档是否一致的工具 |
+| `docs/` | 数据格式、运行方式、边界和部署说明 |
+| `fixtures/` | 维护者验证用的 synthetic 示例数据 |
+| `scripts/` | 检查示例数据和文档合同的工具 |
 | `workspace/` | 真实使用时的本地数据目录 |
-| `deploy/` | 部署说明 |
-| `plans/` | 路线图和后续计划 |
 
-## 给维护者的检查
+## 边界和要求
 
-仓库里包含非个人示例数据，用来检查说明、模板和示例是否一致。
+- 健康记录默认保存在本地电脑。
+- 如果使用云端 AI 服务，发送给 AI 的文字、截图、图片和必要上下文可能会被服务提供商处理。
+- 如果启用 Google Health API，同步请求会经过 Google OAuth 和 Google Health API；token 和原始响应不得提交到 GitHub。
+- 小卡输出只能作为记录整理和健康管理参考，不构成诊断、治疗方案或处方建议。
+- 小卡不绑定固定 AI；如果要处理食物照片、营养标签、体检单或截图 fallback，所用模型必须能理解图片或识别图片文字。
 
-常用检查命令：
+更多边界说明见 [隐私与医学边界](docs/privacy-and-medical-boundaries.md)。
+
+## 维护者验证
+
+仓库内的 synthetic fixtures 用于检查说明、模板和示例是否一致，不能证明真实个人数据、真实截图识别或 Google Health API 自动同步已完整闭环。
 
 ```bash
 python3 scripts/validate_repository_contract.py
@@ -174,17 +153,13 @@ python3 scripts/validate_phase2c_screenshot_fixtures.py
 python3 scripts/validate_phase3a_c8_fixtures.py
 ```
 
-这些检查只能证明示例数据和仓库说明一致，不能证明 Google Health API 正式自动同步、真实截图识别、真实自动报告或个人健康数据已经完全闭环。
-
 ## 更多文档
 
 - [最小使用约定](docs/phase1-minimum-contract.md)
 - [数据保存格式](docs/data-schema.md)
 - [Google Health API 接入决策](docs/google-health-api-ingestion.md)
 - [自动报告说明](docs/report-automation.md)
-- [OpenClaw 部署说明](deploy/openclaw-setup.md)
-- [Claude Code 部署说明](deploy/claude-code-setup.md)
-- [公开发布检查清单](docs/public-release-checklist.md)
+- [OpenClaw 部署说明](docs/openclaw-setup.md)
 - [知识库来源](docs/knowledge-base-sources.md)
 
 ## 贡献
@@ -194,7 +169,7 @@ python3 scripts/validate_phase3a_c8_fixtures.py
 - 修正食物营养数据。
 - 补充体检指标说明。
 - 改进日志或报告模板。
-- 补充不含个人信息的示例数据。
+- 补充不含个人信息的 synthetic 示例数据。
 - 改进文档中不清楚或容易误解的地方。
 
 ## 致谢

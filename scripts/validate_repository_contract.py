@@ -35,13 +35,13 @@ LINK_PATTERN = re.compile(r"(?<!!)\[[^\]\n]+\]\(([^)\n]+)\)")
 
 def tracked_files() -> list[Path]:
     result = subprocess.run(
-        ["git", "ls-files"],
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
         cwd=ROOT,
         check=True,
         text=True,
         stdout=subprocess.PIPE,
     )
-    return [ROOT / line for line in result.stdout.splitlines() if line]
+    return [ROOT / line for line in result.stdout.splitlines() if line and (ROOT / line).exists()]
 
 
 def relative(path: Path) -> str:

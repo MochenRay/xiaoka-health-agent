@@ -94,8 +94,8 @@ openclaw agents list --bindings | grep xiaoka
 
 这些任务属于 **OpenClaw Cron**，不是系统 `crontab`。
 
-当前运行态规格见 [docs/openclaw-runtime.md](../docs/openclaw-runtime.md)。仓库 `git pull` 不会自动修改 OpenClaw `cron` payload；修改任务前先备份 `~/.openclaw/cron/jobs.json`。
-周报/月报的生成规则见 [docs/report-automation.md](../docs/report-automation.md)。
+当前运行态规格见 [openclaw-runtime.md](openclaw-runtime.md)。仓库 `git pull` 不会自动修改 OpenClaw `cron` payload；修改任务前先备份 `~/.openclaw/cron/jobs.json`。
+周报/月报的生成规则见 [report-automation.md](report-automation.md)。
 
 | 任务 | 时间 | 状态 | 说明 |
 |------|------|------|------|
@@ -111,4 +111,4 @@ openclaw agents list --bindings | grep xiaoka
 - 仓库里的 Phase 1 标准路径以 `workspace/` 为准；历史本地部署可能仍残留旧路径
 - 推荐使用支持多模态（图片输入）的模型；当前部署模型以 OpenClaw 配置为准
 - 使用云端模型时，对话内容会发送给模型提供商
-- 后续仓库更新：在 Mac Mini 上 `cd ~/.openclaw/workspace-xiaoka && git pull --ff-only origin main` 同步；如需修改 `cron`，再按 runtime 规格单独验证
+- 后续仓库更新：在 OpenClaw workspace 中执行 `git pull --ff-only origin main` 同步；如需修改 `cron`，再按 runtime 规格单独验证
