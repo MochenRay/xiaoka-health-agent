@@ -14,9 +14,10 @@
 - 记录饮食、体重、体检、运动、补剂、睡眠和目标调整。
 - 使用本地文件保存每日记录、每日 JSON、体检资料、报告和个人食物库。
 - 通过 OpenClaw 定时任务整理前一天记录、校验结算、生成前日汇总、周报和月报。
+- 维护者已有 runtime smoke dry-run planner，可生成备份、注入、运行历史检查和恢复步骤；它不会运行 OpenClaw cron 或触发 Telegram。
 - 周报和月报已验证“无数据静默”和“synthetic 示例数据生成报告”两类场景。
-- Google Health API 已人工验证可读取来自 iOS Apple Health / HealthKit 的步数、睡眠和运动数据。
-- Apple Watch / Apple Health 截图保留为 fallback；仓库用 synthetic fixtures 验证确认后的识别结果如何进入每日数据。
+- Google Health API 已人工验证可读取来自 iOS Apple Health / HealthKit 的步数、睡眠和运动数据；仓库已有 repo 层 importer v1，可把脱敏示例数据规范化并幂等追加到本地日志。
+- Apple Watch / Apple Health 截图保留为 fallback；仓库用 synthetic fixtures 验证确认后的识别结果如何进入每日数据，并拒收低置信度或缺关键字段的输入。
 - 跨维度观察已定义：数据足够时低强度观察饮食、体重、运动、活动和睡眠之间的关系；数据不足时明确拒绝趋势或因果结论。
 - 药物、运动、睡眠深度分析已有报告合同和 synthetic 示例。
 
@@ -27,9 +28,9 @@
 | 健康档案 | 通过问答收集身高、体重、目标、活动水平、运动背景、用药和补剂背景 |
 | 饮食记录 | 记录文字描述、食物照片或菜单截图中的饮食信息，估算热量和营养素 |
 | 体重追踪 | 保存体重记录，观察近期变化和目标差距 |
-| 运动记录 | 记录手动运动描述；设备数据主路径改为 Google Health API，截图仅作为 fallback |
-| 活动记录 | 记录步数、活动消耗等日级活动摘要 |
-| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量 |
+| 运动记录 | 记录手动运动描述；设备数据主路径改为 Google Health API，repo importer v1 已通过 synthetic proof，截图仅作为 fallback |
+| 活动记录 | 记录步数、活动消耗等日级活动摘要；可由 Google Health 脱敏示例导入本地日志 |
+| 睡眠记录 | 记录睡眠时长、睡眠窗口和睡眠质量；可接收 Google Health sleep dataPoints 规范化结果 |
 | 补剂管理 | 记录补剂和剂量，提醒可能需要注意的药物或补剂边界 |
 | 体检解读 | 整理体检指标，标记需要关注的异常项，但不替代医生诊断 |
 | 周报和月报 | 自动汇总一周或一个月的记录，写入报告文件 |
@@ -44,7 +45,7 @@
 - 不在数据不足时强行给出趋势、因果或跨维度结论。
 - 不做实时运动追踪。
 - 不做食品条码扫描。
-- 当前还没有把 Google Health API 接入为正式自动同步器。
+- 当前还没有把 Google Health API 接成真实 OAuth 自动同步器；repo importer v1 只验证脱敏输入、规范化和本地日志追加路径。
 - 当前不做 Apple Health XML、Health Auto Export 或其他文件式批量导入。
 - 当前不做体脂秤或其他外部设备自动导入。
 - 当前不自带远端数据库或账号系统。
@@ -88,7 +89,7 @@ printf '[]\n' > workspace/food-library/my-foods.json
 
 ```text
 你：同步最近两周的步数、睡眠和运动
-小卡：我会优先走 Google Health API；如果没有授权或接口不可用，再用手动记录或截图 fallback。
+小卡：我会优先走 Google Health API；如果还没有授权或自动同步未配置，再用手动记录或截图 fallback。
 ```
 
 ## 数据如何保存
@@ -118,7 +119,7 @@ printf '[]\n' > workspace/food-library/my-foods.json
 | `references/` | 营养、医学、药物、补剂、运动和设备知识库 |
 | `docs/` | 数据格式、运行方式、边界和部署说明 |
 | `fixtures/` | 维护者验证用的 synthetic 示例数据 |
-| `scripts/` | 检查示例数据和文档合同的工具 |
+| `scripts/` | 检查示例数据、文档合同、Google Health importer 和 runtime smoke planner 的工具 |
 | `workspace/` | 真实使用时的本地数据目录 |
 
 ## 边界和要求
@@ -133,7 +134,7 @@ printf '[]\n' > workspace/food-library/my-foods.json
 
 ## 维护者验证
 
-仓库内的 synthetic fixtures 用于检查说明、模板和示例是否一致，不能证明真实个人数据、真实截图识别或 Google Health API 自动同步已完整闭环。
+仓库内的 synthetic fixtures 用于检查说明、模板、示例和 repo 层导入逻辑是否一致，不能证明真实个人数据、真实截图识别、真实 OAuth 拉取或 Google Health API 自动同步已完整闭环。
 
 ```bash
 python3 scripts/validate_repository_contract.py
