@@ -1,7 +1,35 @@
 # Changelog
 
 本文件记录公开发布口径下可以稳定描述的能力、验证证据和仍待 runtime
-smoke 的项目。公开 README、发布页和对外介绍应以本文件与发布 checklist 为边界。
+smoke 的项目。公开 README、发布页和对外介绍应以本文件、`docs/PRD.md`、
+`docs/privacy-and-medical-boundaries.md`、`docs/maintainer-memo.md` 与对应
+validator 为边界。
+
+## Unreleased - Google Health API importer v1 and runtime planning
+
+日期：2026-05-30 CST
+
+### Added
+
+- 新增 repo 层 `scripts/import_google_health.py`，支持读取脱敏 fixture、
+  dry-run 输出规范化 records，并可用 `--apply` 幂等追加到
+  `workspace/logs/YYYY-MM/DD.md`。
+- 新增 `fixtures/synthetic/google-health-api/` 与
+  `scripts/validate_google_health_importer.py`，覆盖 `steps` dailyRollUp、
+  `sleep` dataPoints、`exercise` dataPoints、HealthKit/Apple provenance、
+  redaction、幂等追加和 no-network default。
+- 新增 dry-run runtime smoke planner：`scripts/plan_runtime_smoke.py`、
+  `scripts/validate_runtime_smoke_plan.py` 与 synthetic `jobs.json` fixture。
+  planner 只生成备份、注入、运行历史检查和恢复步骤，不运行 OpenClaw cron。
+- Phase 2C screenshot fallback 增加 rejected fixtures，覆盖缺关键字段和
+  低置信度时必须先请用户确认，不得进入 append/settlement 路径。
+
+### Still Pending
+
+- 真实 OAuth client 配置、token refresh、本地 token cache、真实 API fetch 与
+  OpenClaw runtime smoke 尚未实现。
+- C8、M1/E1/S1、真实截图/OCR 的 runtime-proven 状态仍未完成。
+- 不得把 synthetic importer proof 或 dry-run planner 写成真实自动同步闭环。
 
 ## Unreleased - Google Health API ingestion decision
 
@@ -24,7 +52,7 @@ smoke 的项目。公开 README、发布页和对外介绍应以本文件与发�
 
 ### Pending
 
-- 正式 OAuth client 配置、token refresh、本地 token cache、导入脚本、幂等写入和
+- 正式 OAuth client 配置、token refresh、本地 token cache、真实 API fetch 和
   OpenClaw runtime smoke 尚未实现。
 - 不得把本次人工验证中的 token、账号标识、原始响应或真实健康明细写入仓库。
 

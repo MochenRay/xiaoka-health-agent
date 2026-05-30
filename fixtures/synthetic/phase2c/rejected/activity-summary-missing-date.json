@@ -1,0 +1,10 @@
+{
+  "marker": "SYNTHETIC_PHASE2C",
+  "kind": "activity_summary",
+  "source": "apple_health_activity_screenshot",
+  "steps": 7420,
+  "active_energy_kcal": 430,
+  "confidence": "medium",
+  "reject_reason": "missing date; must ask the user to confirm before appending to logs",
+  "note": "Fabricated rejected screenshot result; not real health data."
+}

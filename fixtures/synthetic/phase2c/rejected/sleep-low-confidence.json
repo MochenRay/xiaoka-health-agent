@@ -1,0 +1,10 @@
+{
+  "marker": "SYNTHETIC_PHASE2C",
+  "kind": "sleep",
+  "source": "apple_health_sleep_screenshot",
+  "date": "2026-05-19",
+  "duration_h": 6.8,
+  "confidence": "low",
+  "reject_reason": "low confidence; must ask the user to confirm before appending to logs",
+  "note": "Fabricated rejected screenshot result; not real health data."
+}

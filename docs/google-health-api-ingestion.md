@@ -1,7 +1,7 @@
 # Google Health API 接入决策
 
-> 状态：2026-05-28 CST 已完成人工 OAuth read smoke；仓库 importer、token refresh
-> 和 OpenClaw runtime 自动同步尚未实现。
+> 状态：2026-05-30 CST 已完成人工 OAuth read smoke，并补齐 repo 层 importer
+> v1 与 synthetic proof；真实 OAuth/token refresh、OpenClaw runtime smoke 和自动同步尚未完成。
 
 ## 结论
 
@@ -25,6 +25,38 @@ Google Health API 取代 Apple Watch / Apple Health 截图，成为运动、步�
 - 返回来源中出现 `HEALTH_KIT` 与 Apple 设备/应用来源，说明 iOS Apple Health 经 Google Health API 可读。
 
 本次验证没有把 OAuth token、refresh token、账号 email、health user id、原始响应或真实健康明细写入仓库。
+
+## Repo 层 importer v1
+
+当前仓库已有 `scripts/import_google_health.py`：
+
+- 输入：脱敏 Google Health API fixture JSON。
+- dry-run：输出规范化 records，不写文件。
+- apply：按 date 写入 `workspace/logs/YYYY-MM/DD.md` 的 `## Google Health API 导入`
+  稳定 append section。
+- 幂等键：`date + kind + source + interval`，同一记录重复 apply 不追加第二次。
+- 安全边界：不执行 OAuth，不读取 token cache，不访问网络，不保存完整 raw response。
+
+配套 synthetic fixture 位于 `fixtures/synthetic/google-health-api/`，覆盖：
+
+- `steps` dailyRollUp。
+- `sleep` dataPoints。
+- `exercise` dataPoints。
+- `HEALTH_KIT` / Apple Health 或 Apple Fitness provenance。
+
+验证命令：
+
+```bash
+python3 scripts/validate_google_health_importer.py
+```
+
+示例 dry-run：
+
+```bash
+python3 scripts/import_google_health.py \
+  --fixture-input fixtures/synthetic/google-health-api/google-health-api-synthetic.json \
+  --dry-run
+```
 
 ## Scope 和接口边界
 
@@ -88,7 +120,8 @@ Google Health API 取代 Apple Watch / Apple Health 截图，成为运动、步�
 ## 后续实现切片
 
 1. 本地 OAuth 配置：使用用户自己的 OAuth client，token cache 放 ignored local path。
-2. 只读 import script：按日期窗口拉取 `steps`、`sleep`、`exercise`，输出规范化 records。
-3. 幂等写入：按 date + data type + source + interval 去重，避免重复追加。
-4. runtime smoke：用户确认测试窗口后，用真实账号拉取短窗口数据，写入 ignored `workspace/`，不触发 Telegram。
-5. 报告验证：复用既有周报/月报、E1/S1/C8 数据门槛，不因为接入 API 就提高医学断言强度。
+2. 真实只读 fetch：在 repo importer v1 的 normalized record 合同上接真实
+   `steps`、`sleep`、`exercise` 日期窗口读取。
+3. runtime smoke：用户确认测试窗口后，用真实账号拉取短窗口数据，写入 ignored
+   `workspace/`，不触发 Telegram。
+4. 报告验证：复用既有周报/月报、E1/S1/C8 数据门槛，不因为接入 API 就提高医学断言强度。

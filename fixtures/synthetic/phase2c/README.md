@@ -9,6 +9,8 @@ They intentionally avoid real screenshots. The `recognized/` JSON files are
 synthetic, already-confirmed OCR/Vision results for single screenshots. The
 paired Markdown log shows the fixed A4/A6 append format, and the paired
 `expected/` JSON shows the expected settlement shape under `docs/data-schema.md`.
+The `rejected/` JSON files are synthetic OCR/Vision results that must not be
+appended because key fields are missing or confidence is too low.
 
 This validates:
 
@@ -19,6 +21,8 @@ This validates:
 - Apple Health sleep screenshot fields: date, sleep duration, source.
 - The mapping from confirmed screenshot recognition results to Markdown entries
   and expected standard daily JSON.
+- Rejection of low-confidence or incomplete screenshot recognition results
+  before they can reach the append format.
 
 This does not validate OCR quality, binary image rendering, runtime settlement,
 Google Health API import, Apple Health XML, Health Auto Export, or any

@@ -1,0 +1,91 @@
+{
+  "marker": "SYNTHETIC_GOOGLE_HEALTH_API_FIXTURE_V1",
+  "notes": "SYNTHETIC fabricated Google Health API importer fixture; not real health data.",
+  "steps_daily_rollup": {
+    "parent": "users/me/dataTypes/steps",
+    "dailyRollUp": [
+      {
+        "date": {
+          "year": 2026,
+          "month": 7,
+          "day": 8
+        },
+        "interval": {
+          "startTime": "2026-07-08T00:00:00+08:00",
+          "endTime": "2026-07-09T00:00:00+08:00"
+        },
+        "value": {
+          "integerValue": 9824
+        },
+        "sources": [
+          {
+            "platform": "HEALTH_KIT",
+            "application": "com.apple.Health",
+            "device": {
+              "formFactor": "PHONE"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "sleep_data_points": {
+    "parent": "users/me/dataTypes/sleep",
+    "dataPoints": [
+      {
+        "interval": {
+          "startTime": "2026-07-07T23:34:00+08:00",
+          "endTime": "2026-07-08T07:00:00+08:00"
+        },
+        "sleep": {
+          "durationMillis": 26760000,
+          "timeInBedMillis": 28800000,
+          "efficiencyPercent": 93,
+          "stages": {
+            "awakeMinutes": 20,
+            "remMinutes": 91,
+            "coreMinutes": 287,
+            "deepMinutes": 68
+          },
+          "quality": null
+        },
+        "sources": [
+          {
+            "platform": "HEALTH_KIT",
+            "application": "com.apple.Health",
+            "device": {
+              "formFactor": "PHONE"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "exercise_data_points": {
+    "parent": "users/me/dataTypes/exercise",
+    "dataPoints": [
+      {
+        "interval": {
+          "startTime": "2026-07-08T18:30:00+08:00",
+          "endTime": "2026-07-08T19:15:00+08:00"
+        },
+        "exercise": {
+          "activityType": "outdoor_walk",
+          "durationMillis": 2700000,
+          "activeEnergyKcal": 286,
+          "distanceMeters": 3600,
+          "steps": 4700
+        },
+        "sources": [
+          {
+            "platform": "HEALTH_KIT",
+            "application": "com.apple.Fitness",
+            "device": {
+              "formFactor": "WATCH"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

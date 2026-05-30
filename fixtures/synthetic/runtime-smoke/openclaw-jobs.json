@@ -1,0 +1,100 @@
+{
+  "jobs": [
+    {
+      "id": "synthetic-settlement",
+      "name": "零点结算",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "5 0 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "xiaoka",
+        "channel": "telegram",
+        "mode": "none",
+        "to": "SYNTHETIC_TARGET"
+      }
+    },
+    {
+      "id": "synthetic-daily-summary",
+      "name": "前日汇总",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "xiaoka",
+        "channel": "telegram",
+        "mode": "announce",
+        "to": "SYNTHETIC_TARGET"
+      }
+    },
+    {
+      "id": "synthetic-settlement-check",
+      "name": "结算校验",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 0 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "xiaoka",
+        "channel": "telegram",
+        "mode": "none",
+        "to": "SYNTHETIC_TARGET"
+      }
+    },
+    {
+      "id": "synthetic-weekly",
+      "name": "周报",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 8 * * 1",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "xiaoka",
+        "channel": "telegram",
+        "mode": "announce",
+        "to": "SYNTHETIC_TARGET"
+      }
+    },
+    {
+      "id": "synthetic-monthly",
+      "name": "月报",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 8 1 * *",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "xiaoka",
+        "channel": "telegram",
+        "mode": "announce",
+        "to": "SYNTHETIC_TARGET"
+      }
+    },
+    {
+      "id": "synthetic-other-agent",
+      "name": "非小卡任务",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "delivery": {
+        "accountId": "other",
+        "channel": "telegram",
+        "mode": "announce",
+        "to": "SYNTHETIC_TARGET"
+      }
+    }
+  ]
+}

@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_ROOT = ROOT / "fixtures" / "synthetic" / "phase2c"
 RECOGNIZED = FIXTURE_ROOT / "recognized"
+REJECTED = FIXTURE_ROOT / "rejected"
 LOG_PATH = FIXTURE_ROOT / "workspace" / "logs" / "2026-05" / "18.md"
 JSON_PATH = FIXTURE_ROOT / "expected" / "workspace" / "data" / "2026-05" / "18.json"
 MARKER = "SYNTHETIC_PHASE2C"
@@ -31,6 +32,10 @@ EXPECTED_RECOGNIZED_FILES = {
     "activity-summary-apple-health.json",
     "sleep-apple-health.json",
     "workout-apple-watch.json",
+}
+EXPECTED_REJECTED_FILES = {
+    "activity-summary-missing-date.json",
+    "sleep-low-confidence.json",
 }
 
 
@@ -168,6 +173,35 @@ def validate_recognized(workout: dict, activity: dict, sleep: dict) -> None:
         raise ValueError("sleep confidence must be high or medium; low requires user confirmation")
 
 
+def validate_rejected() -> None:
+    actual_files = {path.name for path in REJECTED.glob("*.json")}
+    if actual_files != EXPECTED_REJECTED_FILES:
+        raise ValueError(
+            "rejected fixtures must exactly match "
+            f"{sorted(EXPECTED_REJECTED_FILES)}, got {sorted(actual_files)}"
+        )
+    for path in sorted(REJECTED.glob("*.json")):
+        data = load_recognized(path)
+        reason = data.get("reject_reason")
+        if not isinstance(reason, str) or not reason:
+            raise ValueError(f"{path}: rejected fixture must include reject_reason")
+        if data.get("confidence") == "low":
+            if "confirm" not in reason:
+                raise ValueError(f"{path}: low-confidence rejection must require user confirmation")
+            continue
+        required_by_kind = {
+            "workout": ("date", "type", "duration_min", "active_energy_kcal", "confidence"),
+            "activity_summary": ("date", "steps", "active_energy_kcal", "confidence"),
+            "sleep": ("date", "duration_h", "confidence"),
+        }
+        kind = data.get("kind")
+        missing = [key for key in required_by_kind.get(kind, ()) if not data.get(key)]
+        if not missing:
+            raise ValueError(f"{path}: rejected fixture must be low confidence or miss a required field")
+        if "missing" not in reason:
+            raise ValueError(f"{path}: missing-field rejection must explain missing fields")
+
+
 def validate_log(log_text: str, workout: dict, activity: dict, sleep: dict) -> None:
     if MARKER not in log_text:
         raise ValueError(f"{LOG_PATH}: must include {MARKER}")
@@ -290,6 +324,7 @@ def main() -> int:
     activity = load_recognized(RECOGNIZED / "activity-summary-apple-health.json")
     sleep = load_recognized(RECOGNIZED / "sleep-apple-health.json")
     validate_recognized(workout, activity, sleep)
+    validate_rejected()
 
     log_text = LOG_PATH.read_text(encoding="utf-8")
     validate_log(log_text, workout, activity, sleep)
@@ -300,6 +335,7 @@ def main() -> int:
     print("validated Phase 2C screenshot fallback fixtures")
     print("covered: workout screenshot, activity summary screenshot, sleep screenshot")
     print("validated mapping: recognized result -> Markdown append shape -> expected daily JSON")
+    print("validated rejection: low-confidence and incomplete screenshot results require confirmation")
     return 0
 
 

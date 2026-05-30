@@ -84,6 +84,31 @@
 - 不把真实 chat id、OAuth token、API 原始响应或个人健康数据写入仓库。
 - `openclaw cron run` 只表示任务入队；必须再查运行历史终态，不能把入队当作成功。
 
+## Runtime smoke planner
+
+仓库提供 `scripts/plan_runtime_smoke.py` 作为 dry-run planner。它只读取
+synthetic 或已脱敏的 `jobs.json` 形状，确认小卡五条任务、schedule、
+delivery mode、`announce` 风险和受影响的标准路径，然后输出人工执行前的
+备份、注入、运行历史检查与恢复步骤。
+
+这个 planner 不会：
+
+- SSH 到 Mac Mini。
+- 调用 `openclaw cron run`、`openclaw cron edit` 或任何 OpenClaw 写命令。
+- 修改 `~/.openclaw/cron/jobs.json`。
+- 写入 `workspace/data/`、`workspace/reports/` 或 Telegram。
+
+本地验证命令：
+
+```bash
+python3 scripts/validate_runtime_smoke_plan.py
+python3 scripts/plan_runtime_smoke.py --jobs-json fixtures/synthetic/runtime-smoke/openclaw-jobs.json --scenario c8
+```
+
+若未来需要真实 runtime smoke，仍必须先确认测试窗口、接收方、备份路径和
+回滚方式；尤其是 `前日汇总`、`周报`、`月报` 都可能触发 `announce`
+delivery。
+
 ## Repo 同步与 runtime 同步
 
 - 仓库同步：提交并推送 GitHub 后，在 OpenClaw workspace 执行 `git pull --ff-only origin main`。

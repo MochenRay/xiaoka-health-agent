@@ -137,6 +137,8 @@ printf '[]\n' > workspace/food-library/my-foods.json
 
 ```bash
 python3 scripts/validate_repository_contract.py
+python3 scripts/validate_google_health_importer.py
+python3 scripts/validate_runtime_smoke_plan.py
 python3 scripts/validate_settlement_prompt_contract.py
 python3 scripts/validate_daily_json_schema.py
 python3 scripts/validate_report_contracts.py

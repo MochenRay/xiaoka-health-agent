@@ -59,8 +59,8 @@
 
 ## Public wording guardrails
 
-- 可以说：本地文件驱动、路径合同稳定、Google Health API read smoke 已通过、synthetic fixture validators 已覆盖截图 fallback mapping
+- 可以说：本地文件驱动、路径合同稳定、Google Health API read smoke 已通过、repo 层 importer synthetic proof 已建立、synthetic fixture validators 已覆盖截图 fallback mapping
   与 C8 静态合同。
 - 不可说：Google Health API 自动同步、真实截图/OCR、C8 runtime 周/月报、Apple Health 文件式历史同步或医学趋势分析已经
   完整闭环，除非对应 runtime smoke 已完成并登记。
-- 所有公开能力声明应能追溯到 README、`CHANGELOG.md`、release checklist 或对应 validator。
+- 所有公开能力声明应能追溯到 README、`CHANGELOG.md`、`docs/PRD.md`、`docs/maintainer-memo.md` 或对应 validator。

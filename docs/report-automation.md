@@ -103,6 +103,17 @@ OpenClaw 月报任务应使用如下语义：
 
 周报/月报 cron 已有启用与验证记录。本节只说明后续修改报告 prompt、模板或 cron payload 后的重新验证边界，不表示 C8 runtime 已重新验证。
 
+真实 runtime smoke 前，可以先运行仓库 dry-run planner：
+
+```bash
+python3 scripts/validate_runtime_smoke_plan.py
+python3 scripts/plan_runtime_smoke.py --jobs-json fixtures/synthetic/runtime-smoke/openclaw-jobs.json --scenario report
+```
+
+planner 只生成步骤清单，不运行 OpenClaw cron，不写 `jobs.json`，不触发
+Telegram。它通过 synthetic `jobs.json` fixture 检查小卡五条任务、`announce`
+delivery 风险、标准路径和备份/恢复顺序。
+
 重新验证前，先按 `docs/openclaw-runtime.md` 备份 `jobs.json` 和会被覆盖的报告文件。验证时必须覆盖两类场景：
 
 - 无数据：写入或覆盖 `0/N` 报告，Telegram 输出 `NO_REPLY`。
